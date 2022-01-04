@@ -1,0 +1,4332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.10">
+<meta name="author" content="Peter Jacobs">
+<title>A Tutorial Guide to Programming PIC18, PIC24 and ATmega Microcontrollers with FlashForth</title>
+<style>
+/*! normalize.css v2.1.2 | MIT License | git.io/normalize */
+/* ========================================================================== HTML5 display definitions ========================================================================== */
+/** Correct `block` display not defined in IE 8/9. */
+article, aside, details, figcaption, figure, footer, header, hgroup, main, nav, section, summary { display: block; }
+
+/** Correct `inline-block` display not defined in IE 8/9. */
+audio, canvas, video { display: inline-block; }
+
+/** Prevent modern browsers from displaying `audio` without controls. Remove excess height in iOS 5 devices. */
+audio:not([controls]) { display: none; height: 0; }
+
+/** Address `[hidden]` styling not present in IE 8/9. Hide the `template` element in IE, Safari, and Firefox < 22. */
+[hidden], template { display: none; }
+
+script { display: none !important; }
+
+/* ========================================================================== Base ========================================================================== */
+/** 1. Set default font family to sans-serif. 2. Prevent iOS text size adjust after orientation change, without disabling user zoom. */
+html { font-family: sans-serif; /* 1 */ -ms-text-size-adjust: 100%; /* 2 */ -webkit-text-size-adjust: 100%; /* 2 */ }
+
+/** Remove default margin. */
+body { margin: 0; }
+
+/* ========================================================================== Links ========================================================================== */
+/** Remove the gray background color from active links in IE 10. */
+a { background: transparent; }
+
+/** Address `outline` inconsistency between Chrome and other browsers. */
+a:focus { outline: thin dotted; }
+
+/** Improve readability when focused and also mouse hovered in all browsers. */
+a:active, a:hover { outline: 0; }
+
+/* ========================================================================== Typography ========================================================================== */
+/** Address variable `h1` font-size and margin within `section` and `article` contexts in Firefox 4+, Safari 5, and Chrome. */
+h1 { font-size: 2em; margin: 0.67em 0; }
+
+/** Address styling not present in IE 8/9, Safari 5, and Chrome. */
+abbr[title] { border-bottom: 1px dotted; }
+
+/** Address style set to `bolder` in Firefox 4+, Safari 5, and Chrome. */
+b, strong { font-weight: bold; }
+
+/** Address styling not present in Safari 5 and Chrome. */
+dfn { font-style: italic; }
+
+/** Address differences between Firefox and other browsers. */
+hr { -moz-box-sizing: content-box; box-sizing: content-box; height: 0; }
+
+/** Address styling not present in IE 8/9. */
+mark { background: #ff0; color: #000; }
+
+/** Correct font family set oddly in Safari 5 and Chrome. */
+code, kbd, pre, samp { font-family: monospace, serif; font-size: 1em; }
+
+/** Improve readability of pre-formatted text in all browsers. */
+pre { white-space: pre-wrap; }
+
+/** Set consistent quote types. */
+q { quotes: "\201C" "\201D" "\2018" "\2019"; }
+
+/** Address inconsistent and variable font size in all browsers. */
+small { font-size: 80%; }
+
+/** Prevent `sub` and `sup` affecting `line-height` in all browsers. */
+sub, sup { font-size: 75%; line-height: 0; position: relative; vertical-align: baseline; }
+
+sup { top: -0.5em; }
+
+sub { bottom: -0.25em; }
+
+/* ========================================================================== Embedded content ========================================================================== */
+/** Remove border when inside `a` element in IE 8/9. */
+img { border: 0; }
+
+/** Correct overflow displayed oddly in IE 9. */
+svg:not(:root) { overflow: hidden; }
+
+/* ========================================================================== Figures ========================================================================== */
+/** Address margin not present in IE 8/9 and Safari 5. */
+figure { margin: 0; }
+
+/* ========================================================================== Forms ========================================================================== */
+/** Define consistent border, margin, and padding. */
+fieldset { border: 1px solid #c0c0c0; margin: 0 2px; padding: 0.35em 0.625em 0.75em; }
+
+/** 1. Correct `color` not being inherited in IE 8/9. 2. Remove padding so people aren't caught out if they zero out fieldsets. */
+legend { border: 0; /* 1 */ padding: 0; /* 2 */ }
+
+/** 1. Correct font family not being inherited in all browsers. 2. Correct font size not being inherited in all browsers. 3. Address margins set differently in Firefox 4+, Safari 5, and Chrome. */
+button, input, select, textarea { font-family: inherit; /* 1 */ font-size: 100%; /* 2 */ margin: 0; /* 3 */ }
+
+/** Address Firefox 4+ setting `line-height` on `input` using `!important` in the UA stylesheet. */
+button, input { line-height: normal; }
+
+/** Address inconsistent `text-transform` inheritance for `button` and `select`. All other form control elements do not inherit `text-transform` values. Correct `button` style inheritance in Chrome, Safari 5+, and IE 8+. Correct `select` style inheritance in Firefox 4+ and Opera. */
+button, select { text-transform: none; }
+
+/** 1. Avoid the WebKit bug in Android 4.0.* where (2) destroys native `audio` and `video` controls. 2. Correct inability to style clickable `input` types in iOS. 3. Improve usability and consistency of cursor style between image-type `input` and others. */
+button, html input[type="button"], input[type="reset"], input[type="submit"] { -webkit-appearance: button; /* 2 */ cursor: pointer; /* 3 */ }
+
+/** Re-set default cursor for disabled elements. */
+button[disabled], html input[disabled] { cursor: default; }
+
+/** 1. Address box sizing set to `content-box` in IE 8/9. 2. Remove excess padding in IE 8/9. */
+input[type="checkbox"], input[type="radio"] { box-sizing: border-box; /* 1 */ padding: 0; /* 2 */ }
+
+/** 1. Address `appearance` set to `searchfield` in Safari 5 and Chrome. 2. Address `box-sizing` set to `border-box` in Safari 5 and Chrome (include `-moz` to future-proof). */
+input[type="search"] { -webkit-appearance: textfield; /* 1 */ -moz-box-sizing: content-box; -webkit-box-sizing: content-box; /* 2 */ box-sizing: content-box; }
+
+/** Remove inner padding and search cancel button in Safari 5 and Chrome on OS X. */
+input[type="search"]::-webkit-search-cancel-button, input[type="search"]::-webkit-search-decoration { -webkit-appearance: none; }
+
+/** Remove inner padding and border in Firefox 4+. */
+button::-moz-focus-inner, input::-moz-focus-inner { border: 0; padding: 0; }
+
+/** 1. Remove default vertical scrollbar in IE 8/9. 2. Improve readability and alignment in all browsers. */
+textarea { overflow: auto; /* 1 */ vertical-align: top; /* 2 */ }
+
+/* ========================================================================== Tables ========================================================================== */
+/** Remove most spacing between table cells. */
+table { border-collapse: collapse; border-spacing: 0; }
+
+meta.foundation-mq-small { font-family: "only screen and (min-width: 768px)"; width: 768px; }
+
+meta.foundation-mq-medium { font-family: "only screen and (min-width:1280px)"; width: 1280px; }
+
+meta.foundation-mq-large { font-family: "only screen and (min-width:1440px)"; width: 1440px; }
+
+*, *:before, *:after { -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; }
+
+html, body { font-size: 100%; }
+
+body { background: white; color: #222222; padding: 0; margin: 0; font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif; font-weight: normal; font-style: normal; line-height: 1; position: relative; cursor: auto; }
+
+a:hover { cursor: pointer; }
+
+img, object, embed { max-width: 100%; height: auto; }
+
+object, embed { height: 100%; }
+
+img { -ms-interpolation-mode: bicubic; }
+
+#map_canvas img, #map_canvas embed, #map_canvas object, .map_canvas img, .map_canvas embed, .map_canvas object { max-width: none !important; }
+
+.left { float: left !important; }
+
+.right { float: right !important; }
+
+.text-left { text-align: left !important; }
+
+.text-right { text-align: right !important; }
+
+.text-center { text-align: center !important; }
+
+.text-justify { text-align: justify !important; }
+
+.hide { display: none; }
+
+.antialiased { -webkit-font-smoothing: antialiased; }
+
+img { display: inline-block; vertical-align: middle; }
+
+textarea { height: auto; min-height: 50px; }
+
+select { width: 100%; }
+
+object, svg { display: inline-block; vertical-align: middle; }
+
+.center { margin-left: auto; margin-right: auto; }
+
+.stretch { width: 100%; }
+
+p.lead { font-size: 1.21875em; line-height: 1.6; }
+
+.subheader, .admonitionblock td.content > .title, .audioblock > .title, .exampleblock > .title, .imageblock > .title, .listingblock > .title, .literalblock > .title, .stemblock > .title, .openblock > .title, .paragraph > .title, .quoteblock > .title, table.tableblock > .title, .verseblock > .title, .videoblock > .title, .dlist > .title, .olist > .title, .ulist > .title, .qlist > .title, .hdlist > .title { line-height: 1.4; color: #6c818f; font-weight: 300; margin-top: 0.2em; margin-bottom: 0.5em; }
+
+/* Typography resets */
+div, dl, dt, dd, ul, ol, li, h1, h2, h3, #toctitle, .sidebarblock > .content > .title, h4, h5, h6, pre, form, p, blockquote, th, td { margin: 0; padding: 0; direction: ltr; }
+
+/* Default Link Styles */
+a { color: #465158; text-decoration: underline; line-height: inherit; }
+a:hover, a:focus { color: #ff0000; }
+a img { border: none; }
+
+/* Default paragraph styles */
+p { font-family: inherit; font-weight: normal; font-size: 1em; line-height: 1.5; margin-bottom: 1.25em; text-rendering: optimizeLegibility; }
+p aside { font-size: 0.875em; line-height: 1.35; font-style: italic; }
+
+/* Default header styles */
+h1, h2, h3, #toctitle, .sidebarblock > .content > .title, h4, h5, h6 { font-family: ff-meta-web-pro-1, ff-meta-web-pro-2, Arial, "Helvetica Neue", sans-serif; font-weight: bold; font-style: normal; color: #465158; text-rendering: optimizeLegibility; margin-top: 1em; margin-bottom: 0.5em; line-height: 1.2125em; }
+h1 small, h2 small, h3 small, #toctitle small, .sidebarblock > .content > .title small, h4 small, h5 small, h6 small { font-size: 60%; color: #909ea7; line-height: 0; }
+
+h1 { font-size: 2.125em; }
+
+h2 { font-size: 1.6875em; }
+
+h3, #toctitle, .sidebarblock > .content > .title { font-size: 1.375em; }
+
+h4 { font-size: 1.125em; }
+
+h5 { font-size: 1.125em; }
+
+h6 { font-size: 1em; }
+
+hr { border: solid #dddddd; border-width: 1px 0 0; clear: both; margin: 1.25em 0 1.1875em; height: 0; }
+
+/* Helpful Typography Defaults */
+em, i { font-style: italic; line-height: inherit; }
+
+strong, b { font-weight: bold; line-height: inherit; }
+
+small { font-size: 60%; line-height: inherit; }
+
+code { font-family: "Consolas", "Deja Vu Sans Mono", "Bitstream Vera Sans Mono", monospace; font-weight: normal; color: #444444; }
+
+/* Lists */
+ul, ol, dl { font-size: 1em; line-height: 1.5; margin-bottom: 1.25em; list-style-position: outside; font-family: inherit; }
+
+ul, ol { margin-left: 0; }
+ul.no-bullet, ol.no-bullet { margin-left: 0; }
+
+/* Unordered Lists */
+ul li ul, ul li ol { margin-left: 1.25em; margin-bottom: 0; font-size: 1em; /* Override nested font-size change */ }
+ul.square li ul, ul.circle li ul, ul.disc li ul { list-style: inherit; }
+ul.square { list-style-type: square; }
+ul.circle { list-style-type: circle; }
+ul.disc { list-style-type: disc; }
+ul.no-bullet { list-style: none; }
+
+/* Ordered Lists */
+ol li ul, ol li ol { margin-left: 1.25em; margin-bottom: 0; }
+
+/* Definition Lists */
+dl dt { margin-bottom: 0.3em; font-weight: bold; }
+dl dd { margin-bottom: 0.75em; }
+
+/* Abbreviations */
+abbr, acronym { text-transform: uppercase; font-size: 90%; color: black; border-bottom: 1px dotted #dddddd; cursor: help; }
+
+abbr { text-transform: none; }
+
+/* Blockquotes */
+blockquote { margin: 0 0 1.25em; padding: 0.5625em 1.25em 0 1.1875em; border-left: 1px solid #dddddd; }
+blockquote cite { display: block; font-size: 0.8125em; color: #748590; }
+blockquote cite:before { content: "\2014 \0020"; }
+blockquote cite a, blockquote cite a:visited { color: #748590; }
+
+blockquote, blockquote p { line-height: 1.5; color: #909ea7; }
+
+/* Microformats */
+.vcard { display: inline-block; margin: 0 0 1.25em 0; border: 1px solid #dddddd; padding: 0.625em 0.75em; }
+.vcard li { margin: 0; display: block; }
+.vcard .fn { font-weight: bold; font-size: 0.9375em; }
+
+.vevent .summary { font-weight: bold; }
+.vevent abbr { cursor: auto; text-decoration: none; font-weight: bold; border: none; padding: 0 0.0625em; }
+
+@media only screen and (min-width: 768px) { h1, h2, h3, #toctitle, .sidebarblock > .content > .title, h4, h5, h6 { line-height: 1.4; }
+  h1 { font-size: 2.75em; }
+  h2 { font-size: 2.3125em; }
+  h3, #toctitle, .sidebarblock > .content > .title { font-size: 1.6875em; }
+  h4 { font-size: 1.4375em; } }
+/* Tables */
+table { background: white; margin-bottom: 1.25em; border: solid 0 #dddddd; }
+table thead, table tfoot { background: none; font-weight: bold; }
+table thead tr th, table thead tr td, table tfoot tr th, table tfoot tr td { padding: 1px 8px 1px 5px; font-size: 1em; color: #222222; text-align: left; }
+table tr th, table tr td { padding: 1px 8px 1px 5px; font-size: 1em; color: #222222; }
+table tr.even, table tr.alt, table tr:nth-of-type(even) { background: none; }
+table thead tr th, table tfoot tr th, table tbody tr td, table tr td, table tfoot tr td { display: table-cell; line-height: 1.5; }
+
+body { -moz-osx-font-smoothing: grayscale; -webkit-font-smoothing: antialiased; tab-size: 4; }
+
+h1, h2, h3, #toctitle, .sidebarblock > .content > .title, h4, h5, h6 { line-height: 1.4; }
+
+.clearfix:before, .clearfix:after, .float-group:before, .float-group:after { content: " "; display: table; }
+.clearfix:after, .float-group:after { clear: both; }
+
+:not(pre):not([class^=L]) > code { font-size: 0.95em; font-style: normal !important; letter-spacing: 0; padding: 0; background-color: #f2f2f2; -webkit-border-radius: 6px; border-radius: 6px; line-height: inherit; word-wrap: break-word; }
+
+:not(pre) > code.nobreak { word-wrap: normal; }
+:not(pre) > code.nowrap { white-space: nowrap; }
+
+pre { color: inherit; font-family: "Consolas", "Deja Vu Sans Mono", "Bitstream Vera Sans Mono", monospace; line-height: 1.2; }
+pre code, pre pre { color: inherit; font-size: inherit; line-height: inherit; }
+pre > code { display: block; }
+
+pre.nowrap, pre.nowrap pre { white-space: pre; word-wrap: normal; }
+
+em em { font-style: normal; }
+
+strong strong { font-weight: normal; }
+
+.keyseq { color: #333333; }
+
+kbd { font-family: "Consolas", "Deja Vu Sans Mono", "Bitstream Vera Sans Mono", monospace; display: inline-block; color: black; font-size: 0.65em; line-height: 1.45; background-color: #f7f7f7; border: 1px solid #ccc; -webkit-border-radius: 3px; border-radius: 3px; -webkit-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2), 0 0 0 0.1em white inset; box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2), 0 0 0 0.1em white inset; margin: 0 0.15em; padding: 0.2em 0.5em; vertical-align: middle; position: relative; top: -0.1em; white-space: nowrap; }
+
+.keyseq kbd:first-child { margin-left: 0; }
+
+.keyseq kbd:last-child { margin-right: 0; }
+
+.menuseq, .menuref { color: #000; }
+
+.menuseq b:not(.caret), .menuref { font-weight: inherit; }
+
+.menuseq { word-spacing: -0.02em; }
+.menuseq b.caret { font-size: 1.25em; line-height: 0.8; }
+.menuseq i.caret { font-weight: bold; text-align: center; width: 0.45em; }
+
+b.button:before, b.button:after { position: relative; top: -1px; font-weight: normal; }
+
+b.button:before { content: "["; padding: 0 3px 0 2px; }
+
+b.button:after { content: "]"; padding: 0 2px 0 3px; }
+
+p a > code:hover { color: #373737; }
+
+#header, #content, #footnotes, #footer { width: 100%; margin-left: auto; margin-right: auto; margin-top: 0; margin-bottom: 0; max-width: 62.5em; *zoom: 1; position: relative; padding-left: 0.9375em; padding-right: 0.9375em; }
+#header:before, #header:after, #content:before, #content:after, #footnotes:before, #footnotes:after, #footer:before, #footer:after { content: " "; display: table; }
+#header:after, #content:after, #footnotes:after, #footer:after { clear: both; }
+
+#content { margin-top: 1.25em; }
+
+#content:before { content: none; }
+
+#header > h1:first-child { color: #111111; margin-top: 2.25rem; margin-bottom: 0; }
+#header > h1:first-child + #toc { margin-top: 8px; border-top: 1px solid #dddddd; }
+#header > h1:only-child, body.toc2 #header > h1:nth-last-child(2) { border-bottom: 1px solid #dddddd; padding-bottom: 8px; }
+#header .details { border-bottom: 1px solid #dddddd; line-height: 1.45; padding-top: 0.25em; padding-bottom: 0.25em; padding-left: 0.25em; color: #748590; display: -ms-flexbox; display: -webkit-flex; display: flex; -ms-flex-flow: row wrap; -webkit-flex-flow: row wrap; flex-flow: row wrap; }
+#header .details span:first-child { margin-left: -0.125em; }
+#header .details span.email a { color: #909ea7; }
+#header .details br { display: none; }
+#header .details br + span:before { content: "\00a0\2013\00a0"; }
+#header .details br + span.author:before { content: "\00a0\22c5\00a0"; color: #909ea7; }
+#header .details br + span#revremark:before { content: "\00a0|\00a0"; }
+#header #revnumber { text-transform: capitalize; }
+#header #revnumber:after { content: "\00a0"; }
+
+#content > h1:first-child:not([class]) { color: #ffffff; border-bottom: 1px solid #dddddd; padding-bottom: 8px; margin-top: 0; padding-top: 1rem; margin-bottom: 1.25rem; }
+
+#toc { border-bottom: 1px solid #dddddd; padding-bottom: 0.5em; }
+#toc > ul { margin-left: 0.125em; }
+#toc ul.sectlevel0 > li > a { font-style: italic; color: #ffffff; }
+#toc ul.sectlevel0 ul.sectlevel1 { margin: 0.5em 0; }
+#toc ul { font-family: ff-meta-web-pro-1, ff-meta-web-pro-2, Arial, "Helvetica Neue", sans-serif; list-style-type: none; color: #ffffff; }
+#toc li { line-height: 1.3334; margin-top: 0.3334em; }
+#toc a { color: #ffffff; text-decoration: none; }
+#toc a:active { text-decoration: underline; }
+
+#toctitle { color: #ffffff; font-size: 1.2em; }
+#toc-dot-leader { color: #ffffff; }
+
+@media only screen and (min-width: 768px) { #toctitle { font-size: 1.375em; }
+  body.toc2 { padding-left: 15em; padding-right: 0; }
+  #toc.toc2 { margin-top: 0 !important; background: #000000; position: fixed; width: 15em; left: 0; top: 0; border-right: 1px solid #dddddd; border-top-width: 0 !important; border-bottom-width: 0 !important; z-index: 1000; padding: 1.25em 1em; height: 100%; overflow: auto; }
+  #toc.toc2 #toctitle { margin-top: 0; margin-bottom: 0.8rem; font-size: 1.2em; }
+  #toc.toc2 > ul { font-size: 0.9em; margin-bottom: 0; }
+  #toc.toc2 ul ul { margin-left: 0; padding-left: 1em; }
+  #toc.toc2 ul.sectlevel0 ul.sectlevel1 { padding-left: 0; margin-top: 0.5em; margin-bottom: 0.5em; }
+  body.toc2.toc-right { padding-left: 0; padding-right: 15em; }
+  body.toc2.toc-right #toc.toc2 { border-right-width: 0; border-left: 1px solid #dddddd; left: auto; right: 0; } }
+@media only screen and (min-width: 1280px) { body.toc2 { padding-left: 20em; padding-right: 0; }
+  #toc.toc2 { width: 20em; }
+  #toc.toc2 #toctitle { font-size: 1.375em; }
+  #toc.toc2 > ul { font-size: 0.95em; }
+  #toc.toc2 ul ul { padding-left: 1.25em; }
+  body.toc2.toc-right { padding-left: 0; padding-right: 20em; } }
+#content #toc { border-style: solid; border-width: 1px; border-color: #d9d9d9; margin-bottom: 1.25em; padding: 1.25em; background: #f2f2f2; -webkit-border-radius: 6px; border-radius: 6px; }
+#content #toc > :first-child { margin-top: 0; }
+#content #toc > :last-child { margin-bottom: 0; }
+
+#footer { max-width: 100%; background: black; padding: 1.25em; }
+
+#footer-text { color: white; line-height: 1.35; }
+
+#content { margin-bottom: 0.625em; }
+
+.sect1 { padding-bottom: 0.625em; }
+
+@media only screen and (min-width: 768px) { #content { margin-bottom: 1.25em; }
+  .sect1 { padding-bottom: 1.25em; } }
+.sect1:last-child { padding-bottom: 0; }
+
+.sect1 + .sect1 { border-top: 1px solid #dddddd; }
+
+#content h1 > a.anchor, h2 > a.anchor, h3 > a.anchor, #toctitle > a.anchor, .sidebarblock > .content > .title > a.anchor, h4 > a.anchor, h5 > a.anchor, h6 > a.anchor { position: absolute; z-index: 1001; width: 1.5ex; margin-left: -1.5ex; display: block; text-decoration: none !important; visibility: hidden; text-align: center; font-weight: normal; }
+#content h1 > a.anchor:before, h2 > a.anchor:before, h3 > a.anchor:before, #toctitle > a.anchor:before, .sidebarblock > .content > .title > a.anchor:before, h4 > a.anchor:before, h5 > a.anchor:before, h6 > a.anchor:before { content: "\00A7"; font-size: 0.85em; display: block; padding-top: 0.1em; }
+#content h1:hover > a.anchor, #content h1 > a.anchor:hover, h2:hover > a.anchor, h2 > a.anchor:hover, h3:hover > a.anchor, #toctitle:hover > a.anchor, .sidebarblock > .content > .title:hover > a.anchor, h3 > a.anchor:hover, #toctitle > a.anchor:hover, .sidebarblock > .content > .title > a.anchor:hover, h4:hover > a.anchor, h4 > a.anchor:hover, h5:hover > a.anchor, h5 > a.anchor:hover, h6:hover > a.anchor, h6 > a.anchor:hover { visibility: visible; }
+#content h1 > a.link, h2 > a.link, h3 > a.link, #toctitle > a.link, .sidebarblock > .content > .title > a.link, h4 > a.link, h5 > a.link, h6 > a.link { color: #ffffff; text-decoration: none; }
+#content h1 > a.link:hover, h2 > a.link:hover, h3 > a.link:hover, #toctitle > a.link:hover, .sidebarblock > .content > .title > a.link:hover, h4 > a.link:hover, h5 > a.link:hover, h6 > a.link:hover { color: #ffffff; }
+
+details, .audioblock, .imageblock, .literalblock, .listingblock, .stemblock, .videoblock { margin-bottom: 1.25em; }
+
+details > summary:first-of-type { cursor: pointer; display: list-item; outline: none; margin-bottom: 0.75em; }
+
+.admonitionblock td.content > .title, .audioblock > .title, .exampleblock > .title, .imageblock > .title, .listingblock > .title, .literalblock > .title, .stemblock > .title, .openblock > .title, .paragraph > .title, .quoteblock > .title, table.tableblock > .title, .verseblock > .title, .videoblock > .title, .dlist > .title, .olist > .title, .ulist > .title, .qlist > .title, .hdlist > .title { text-rendering: optimizeLegibility; text-align: left; }
+
+table.tableblock.fit-content > caption.title { white-space: nowrap; width: 0; }
+
+.paragraph.lead > p, #preamble > .sectionbody > [class="paragraph"]:first-of-type p { font-size: 1.21875em; line-height: 1.6; color: #111111; }
+
+table.tableblock #preamble > .sectionbody > [class="paragraph"]:first-of-type p { font-size: inherit; }
+
+.admonitionblock > table { border-collapse: separate; border: 0; background: none; width: 100%; }
+.admonitionblock > table td.icon { text-align: center; width: 80px; }
+.admonitionblock > table td.icon img { max-width: none; }
+.admonitionblock > table td.icon .title { font-weight: bold; font-family: ff-meta-web-pro-1, ff-meta-web-pro-2, Arial, "Helvetica Neue", sans-serif; text-transform: uppercase; }
+.admonitionblock > table td.content { padding-left: 1.125em; padding-right: 1.25em; border-left: 1px solid #dddddd; color: #748590; }
+.admonitionblock > table td.content > :last-child > :last-child { margin-bottom: 0; }
+
+.exampleblock > .content { border-style: solid; border-width: 1px; border-color: #e6e6e6; margin-bottom: 1.25em; padding: 1.25em; background: white; -webkit-border-radius: 6px; border-radius: 6px; }
+.exampleblock > .content > :first-child { margin-top: 0; }
+.exampleblock > .content > :last-child { margin-bottom: 0; }
+
+.sidebarblock { border-style: solid; border-width: 1px; border-color: #d4d4d4; margin-bottom: 1.25em; padding: 1.25em; background: #ededed; -webkit-border-radius: 6px; border-radius: 6px; }
+.sidebarblock > :first-child { margin-top: 0; }
+.sidebarblock > :last-child { margin-bottom: 0; }
+.sidebarblock > .content > .title { color: #6c818f; margin-top: 0; }
+
+.exampleblock > .content > :last-child > :last-child, .exampleblock > .content .olist > ol > li:last-child > :last-child, .exampleblock > .content .ulist > ul > li:last-child > :last-child, .exampleblock > .content .qlist > ol > li:last-child > :last-child, .sidebarblock > .content > :last-child > :last-child, .sidebarblock > .content .olist > ol > li:last-child > :last-child, .sidebarblock > .content .ulist > ul > li:last-child > :last-child, .sidebarblock > .content .qlist > ol > li:last-child > :last-child { margin-bottom: 0; }
+
+.literalblock pre, .listingblock > .content > pre { border: 1px solid #cccccc; -webkit-border-radius: 6px; border-radius: 6px; word-wrap: break-word; overflow-x: auto; padding: 0.5em; font-size: 0.8125em; }
+@media only screen and (min-width: 768px) { .literalblock pre, .listingblock > .content > pre { font-size: 0.90625em; } }
+@media only screen and (min-width: 1280px) { .literalblock pre, .listingblock > .content > pre { font-size: 1em; } }
+
+.literalblock pre, .listingblock > .content > pre:not(.highlight), .listingblock > .content > pre[class="highlight"], .listingblock > .content > pre[class^="highlight "] { background: #eeeeee; }
+
+.literalblock.output pre { color: #eeeeee; background-color: inherit; }
+
+.listingblock > .content { position: relative; }
+
+.listingblock code[data-lang]:before { display: none; content: attr(data-lang); position: absolute; font-size: 0.75em; top: 0.425rem; right: 0.5rem; line-height: 1; text-transform: uppercase; color: inherit; opacity: 0.5; }
+
+.listingblock:hover code[data-lang]:before { display: block; }
+
+.listingblock.terminal pre .command:before { content: attr(data-prompt); padding-right: 0.5em; color: inherit; opacity: 0.5; }
+
+.listingblock.terminal pre .command:not([data-prompt]):before { content: "$"; }
+
+.listingblock pre.highlightjs { padding: 0; }
+.listingblock pre.highlightjs > code { padding: 0.5em; -webkit-border-radius: 6px; border-radius: 6px; }
+
+.prettyprint { background: #eeeeee; }
+
+pre.prettyprint .linenums { line-height: 1.2; margin-left: 2em; }
+
+pre.prettyprint li { background: none; list-style-type: inherit; padding-left: 0; }
+
+pre.prettyprint li code[data-lang]:before { opacity: 1; }
+
+pre.prettyprint li:not(:first-child) code[data-lang]:before { display: none; }
+
+table.linenotable { border-collapse: separate; border: 0; margin-bottom: 0; background: none; }
+table.linenotable td[class] { color: inherit; vertical-align: top; padding: 0; line-height: inherit; white-space: normal; }
+table.linenotable td.code { padding-left: 0.75em; }
+table.linenotable td.linenos { border-right: 1px solid currentColor; opacity: 0.35; padding-right: 0.5em; }
+
+pre.pygments .lineno { border-right: 1px solid currentColor; opacity: 0.35; display: inline-block; margin-right: 0.75em; }
+pre.pygments .lineno:before { content: ""; margin-right: -0.125em; }
+
+.quoteblock { margin: 0 1em 1.25em 1.5em; display: table; }
+.quoteblock:not(.excerpt) > .title { margin-left: -1.5em; margin-bottom: 0.75em; }
+.quoteblock blockquote, .quoteblock p { color: #909ea7; font-size: 1.15rem; line-height: 1.75; word-spacing: 0.1em; letter-spacing: 0; font-style: italic; text-align: justify; }
+.quoteblock blockquote { margin: 0; padding: 0; border: 0; }
+.quoteblock blockquote:before { content: "\201c"; float: left; font-size: 2.75em; font-weight: bold; line-height: 0.6em; margin-left: -0.6em; color: #6c818f; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); }
+.quoteblock blockquote > .paragraph:last-child p { margin-bottom: 0; }
+.quoteblock .attribution { margin-top: 0.75em; margin-right: 0.5ex; text-align: right; }
+
+.verseblock { margin: 0 1em 1.25em 1em; }
+.verseblock pre { font-family: "Open Sans", "DejaVu Sans", sans; font-size: 1.15rem; color: #909ea7; font-weight: 300; text-rendering: optimizeLegibility; }
+.verseblock pre strong { font-weight: 400; }
+.verseblock .attribution { margin-top: 1.25rem; margin-left: 0.5ex; }
+
+.quoteblock .attribution, .verseblock .attribution { font-size: 0.8125em; line-height: 1.45; font-style: italic; }
+.quoteblock .attribution br, .verseblock .attribution br { display: none; }
+.quoteblock .attribution cite, .verseblock .attribution cite { display: block; letter-spacing: -0.025em; color: #748590; }
+
+.quoteblock.abstract blockquote:before, .quoteblock.excerpt blockquote:before, .quoteblock .quoteblock blockquote:before { display: none; }
+.quoteblock.abstract blockquote, .quoteblock.abstract p, .quoteblock.excerpt blockquote, .quoteblock.excerpt p, .quoteblock .quoteblock blockquote, .quoteblock .quoteblock p { line-height: 1.6; word-spacing: 0; }
+.quoteblock.abstract { margin: 0 1em 1.25em 1em; display: block; }
+.quoteblock.abstract > .title { margin: 0 0 0.375em 0; font-size: 1.15em; text-align: center; }
+.quoteblock.excerpt > blockquote, .quoteblock .quoteblock { padding: 0 0 0.25em 1em; border-left: 0.25em solid #dddddd; }
+.quoteblock.excerpt, .quoteblock .quoteblock { margin-left: 0; }
+.quoteblock.excerpt blockquote, .quoteblock.excerpt p, .quoteblock .quoteblock blockquote, .quoteblock .quoteblock p { color: inherit; font-size: 1.0625rem; }
+.quoteblock.excerpt .attribution, .quoteblock .quoteblock .attribution { color: inherit; text-align: left; margin-right: 0; }
+
+table.tableblock { max-width: 100%; border-collapse: separate; }
+
+p.tableblock:last-child { margin-bottom: 0; }
+
+td.tableblock > .content { margin-bottom: 1.25em; }
+td.tableblock > .content > :last-child { margin-bottom: -1.25em; }
+
+table.tableblock, th.tableblock, td.tableblock { border: 0 solid #dddddd; }
+
+table.grid-all > thead > tr > .tableblock, table.grid-all > tbody > tr > .tableblock { border-width: 0 0 0 0; }
+
+table.grid-all > tfoot > tr > .tableblock { border-width: 0 0 0 0; }
+
+table.grid-cols > * > tr > .tableblock { border-width: 0 0 0 0; }
+
+table.grid-rows > thead > tr > .tableblock, table.grid-rows > tbody > tr > .tableblock { border-width: 0 0 0 0; }
+
+table.grid-rows > tfoot > tr > .tableblock { border-width: 0 0 0 0; }
+
+table.grid-all > * > tr > .tableblock:last-child, table.grid-cols > * > tr > .tableblock:last-child { border-right-width: 0; }
+
+table.grid-all > tbody > tr:last-child > .tableblock, table.grid-all > thead:last-child > tr > .tableblock, table.grid-rows > tbody > tr:last-child > .tableblock, table.grid-rows > thead:last-child > tr > .tableblock { border-bottom-width: 0; }
+
+table.frame-all { border-width: 0; }
+
+table.frame-sides { border-width: 0 0; }
+
+table.frame-topbot, table.frame-ends { border-width: 0 0; }
+
+table.stripes-all tr, table.stripes-odd tr:nth-of-type(odd), table.stripes-even tr:nth-of-type(even), table.stripes-hover tr:hover { background: none; }
+
+th.halign-left, td.halign-left { text-align: left; }
+
+th.halign-right, td.halign-right { text-align: right; }
+
+th.halign-center, td.halign-center { text-align: center; }
+
+th.valign-top, td.valign-top { vertical-align: top; }
+
+th.valign-bottom, td.valign-bottom { vertical-align: bottom; }
+
+th.valign-middle, td.valign-middle { vertical-align: middle; }
+
+table thead th, table tfoot th { font-weight: bold; }
+
+tbody tr th { display: table-cell; line-height: 1.5; background: none; }
+
+tbody tr th, tbody tr th p, tfoot tr th, tfoot tr th p { color: #222222; font-weight: bold; }
+
+p.tableblock > code:only-child { background: none; padding: 0; }
+
+p.tableblock { font-size: 1em; }
+
+ol { margin-left: 0.25em; }
+
+ul li ol { margin-left: 0; }
+
+dl dd { margin-left: 1.125em; }
+
+dl dd:last-child, dl dd:last-child > :last-child { margin-bottom: 0; }
+
+ol > li p, ul > li p, ul dd, ol dd, .olist .olist, .ulist .ulist, .ulist .olist, .olist .ulist { margin-bottom: 0.625em; }
+
+ul.checklist, ul.none, ol.none, ul.no-bullet, ol.no-bullet, ol.unnumbered, ul.unstyled, ol.unstyled { list-style-type: none; }
+
+ul.no-bullet, ol.no-bullet, ol.unnumbered { margin-left: 0.625em; }
+
+ul.unstyled, ol.unstyled { margin-left: 0; }
+
+ul.checklist { margin-left: 0.625em; }
+
+ul.checklist li > p:first-child > .fa-square-o:first-child, ul.checklist li > p:first-child > .fa-check-square-o:first-child { width: 1.25em; font-size: 0.8em; position: relative; bottom: 0.125em; }
+
+ul.checklist li > p:first-child > input[type="checkbox"]:first-child { margin-right: 0.25em; }
+
+ul.inline { display: -ms-flexbox; display: -webkit-box; display: flex; -ms-flex-flow: row wrap; -webkit-flex-flow: row wrap; flex-flow: row wrap; list-style: none; margin: 0 0 0.625em -1.25em; }
+
+ul.inline > li { margin-left: 1.25em; }
+
+.unstyled dl dt { font-weight: normal; font-style: normal; }
+
+ol.arabic { list-style-type: decimal; }
+
+ol.decimal { list-style-type: decimal-leading-zero; }
+
+ol.loweralpha { list-style-type: lower-alpha; }
+
+ol.upperalpha { list-style-type: upper-alpha; }
+
+ol.lowerroman { list-style-type: lower-roman; }
+
+ol.upperroman { list-style-type: upper-roman; }
+
+ol.lowergreek { list-style-type: lower-greek; }
+
+.hdlist > table, .colist > table { border: 0; background: none; }
+.hdlist > table > tbody > tr, .colist > table > tbody > tr { background: none; }
+
+td.hdlist1, td.hdlist2 { vertical-align: top; padding: 0 0.625em; }
+
+td.hdlist1 { font-weight: bold; padding-bottom: 1.25em; }
+
+.literalblock + .colist, .listingblock + .colist { margin-top: -0.5em; }
+
+.colist td:not([class]):first-child { padding: 0.4em 0.75em 0 0.75em; line-height: 1; vertical-align: top; }
+.colist td:not([class]):first-child img { max-width: none; }
+.colist td:not([class]):last-child { padding: 0.25em 0; }
+
+.thumb, .th { line-height: 0; display: inline-block; border: solid 4px white; -webkit-box-shadow: 0 0 0 1px #dddddd; box-shadow: 0 0 0 1px #dddddd; }
+
+.imageblock.left { margin: 0.25em 0.625em 1.25em 0; }
+.imageblock.right { margin: 0.25em 0 1.25em 0.625em; }
+.imageblock > .title { margin-bottom: 0; }
+.imageblock.thumb, .imageblock.th { border-width: 6px; }
+.imageblock.thumb > .title, .imageblock.th > .title { padding: 0 0.125em; }
+
+.image.left, .image.right { margin-top: 0.25em; margin-bottom: 0.25em; display: inline-block; line-height: 0; }
+.image.left { margin-right: 0.625em; }
+.image.right { margin-left: 0.625em; }
+
+a.image { text-decoration: none; display: inline-block; }
+a.image object { pointer-events: none; }
+
+sup.footnote, sup.footnoteref { font-size: 0.875em; position: static; vertical-align: super; }
+sup.footnote a, sup.footnoteref a { text-decoration: none; }
+sup.footnote a:active, sup.footnoteref a:active { text-decoration: underline; }
+
+#footnotes { padding-top: 0.75em; padding-bottom: 0.75em; margin-bottom: 0.625em; }
+#footnotes hr { width: 20%; min-width: 6.25em; margin: -0.25em 0 0.75em 0; border-width: 1px 0 0 0; }
+#footnotes .footnote { padding: 0 0.375em 0 0.225em; line-height: 1.3334; font-size: 0.875em; margin-left: 1.2em; margin-bottom: 0.2em; }
+#footnotes .footnote a:first-of-type { font-weight: bold; text-decoration: none; margin-left: -1.05em; }
+#footnotes .footnote:last-of-type { margin-bottom: 0; }
+#content #footnotes { margin-top: -0.625em; margin-bottom: 0; padding: 0.75em 0; }
+
+.gist .file-data > table { border: 0; background: #fff; width: 100%; margin-bottom: 0; }
+.gist .file-data > table td.line-data { width: 99%; }
+
+div.unbreakable { page-break-inside: avoid; }
+
+.big { font-size: larger; }
+
+.small { font-size: smaller; }
+
+.underline { text-decoration: underline; }
+
+.overline { text-decoration: overline; }
+
+.line-through { text-decoration: line-through; }
+
+.aqua { color: #00bfbf; }
+
+.aqua-background { background-color: #00fafa; }
+
+.black { color: black; }
+
+.black-background { background-color: black; }
+
+.blue { color: #0000bf; }
+
+.blue-background { background-color: #0000fa; }
+
+.fuchsia { color: #bf00bf; }
+
+.fuchsia-background { background-color: #fa00fa; }
+
+.gray { color: #606060; }
+
+.gray-background { background-color: #7d7d7d; }
+
+.green { color: #006000; }
+
+.green-background { background-color: #007d00; }
+
+.lime { color: #00bf00; }
+
+.lime-background { background-color: #00fa00; }
+
+.maroon { color: #600000; }
+
+.maroon-background { background-color: #7d0000; }
+
+.navy { color: #000060; }
+
+.navy-background { background-color: #00007d; }
+
+.olive { color: #606000; }
+
+.olive-background { background-color: #7d7d00; }
+
+.purple { color: #600060; }
+
+.purple-background { background-color: #7d007d; }
+
+.red { color: #bf0000; }
+
+.red-background { background-color: #fa0000; }
+
+.silver { color: #909090; }
+
+.silver-background { background-color: #bcbcbc; }
+
+.teal { color: #006060; }
+
+.teal-background { background-color: #007d7d; }
+
+.white { color: #bfbfbf; }
+
+.white-background { background-color: #fafafa; }
+
+.yellow { color: #bfbf00; }
+
+.yellow-background { background-color: #fafa00; }
+
+span.icon > .fa { cursor: default; }
+a span.icon > .fa { cursor: inherit; }
+
+.admonitionblock td.icon [class^="fa icon-"] { font-size: 2.5em; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); cursor: default; }
+.admonitionblock td.icon .icon-note:before { content: "\f05a"; color: #333333; }
+.admonitionblock td.icon .icon-tip:before { content: "\f0eb"; text-shadow: 1px 1px 2px rgba(155, 155, 0, 0.8); color: #111; }
+.admonitionblock td.icon .icon-warning:before { content: "\f071"; color: #bf6900; }
+.admonitionblock td.icon .icon-caution:before { content: "\f06d"; color: #bf3400; }
+.admonitionblock td.icon .icon-important:before { content: "\f06a"; color: #bf0000; }
+
+.conum[data-value] { display: inline-block; color: #fff !important; background-color: black; -webkit-border-radius: 50%; border-radius: 50%; text-align: center; font-size: 0.75em; width: 1.67em; height: 1.67em; line-height: 1.67em; font-family: "Open Sans", "DejaVu Sans", sans-serif; font-style: normal; font-weight: bold; }
+.conum[data-value] * { color: #fff !important; }
+.conum[data-value] + b { display: none; }
+.conum[data-value]:after { content: attr(data-value); }
+pre .conum[data-value] { position: relative; top: -0.125em; }
+
+b.conum * { color: inherit !important; }
+
+.conum:not([data-value]):empty { display: none; }
+
+h4 { color: #6c818f; }
+
+.literalblock > .content > pre, .listingblock > .content > pre { -webkit-border-radius: 6px; border-radius: 6px; margin-left: 2em; margin-right: 2em; }
+
+.admonitionblock { margin-left: 2em; margin-right: 2em; }
+.admonitionblock > table { border: 1px solid #609060; border-top-width: 1.5em; background-color: #e9ffe9; border-collapse: separate; -webkit-border-radius: 0; border-radius: 0; }
+.admonitionblock > table td.icon { padding-top: .5em; padding-bottom: .5em; }
+.admonitionblock > table td.content { padding: .5em 1em; color: black; font-size: .9em; border-left: none; }
+
+.sidebarblock { background-color: #e8ecef; border-color: #ccc; }
+.sidebarblock > .content > .title { color: #444444; }
+
+table.tableblock.grid-all { border-collapse: collapse; -webkit-border-radius: 0; border-radius: 0; }
+table.tableblock.grid-all th.tableblock, table.tableblock.grid-all td.tableblock { border-bottom: 1px solid #aaa; }
+
+#footer { background-color: #000000; padding: 2em; }
+
+#footer-text { color: #ffffff; font-size: 0.8em; text-align: center; }
+
+</style>
+</head>
+<body class="article toc2 toc-right">
+<div id="header">
+<h1>A Tutorial Guide to Programming PIC18, PIC24 and ATmega Microcontrollers with FlashForth</h1>
+<div class="details">
+<span id="author" class="author">Peter Jacobs</span><br>
+<span id="revdate">2016 Version ported to ASCIIDOC -- 2021-12-31</span>
+</div>
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_a_selection_of_microcontrollers">1. A selection of microcontrollers</a></li>
+<li><a href="#_development_boards">2. Development boards</a>
+<ul class="sectlevel2">
+<li><a href="#_pic18_family_boards">2.1. PIC18 family boards</a></li>
+<li><a href="#_avr_and_pic24_boards">2.2. AVR and PIC24 boards</a></li>
+</ul>
+</li>
+<li><a href="#_flashforth">3. FlashForth</a>
+<ul class="sectlevel2">
+<li><a href="#_getting_flashforth_and_programming_the_mcu">3.1. Getting FlashForth and programming the MCU</a></li>
+<li><a href="#_building_for_the_pic18f26k22_or_pic18f46k22">3.2. Building for the PIC18F26K22 or PIC18F46K22</a></li>
+<li><a href="#_building_for_the_pic24fv32ka302">3.3. Building for the PIC24FV32KA302</a></li>
+<li><a href="#_building_for_the_atmega328p">3.4. Building for the ATmega328P</a></li>
+</ul>
+</li>
+<li><a href="#_interacting_with_flashforth">4. Interacting with FlashForth</a></li>
+<li><a href="#_introductory_examples">5. Introductory examples</a>
+<ul class="sectlevel2">
+<li><a href="#_flash_a_light_emitting_diode_with_the_pic24">5.1. Flash a light-emitting diode with the PIC24</a></li>
+<li><a href="#_flash_a_light_emitting_diode_with_the_pic24_2">5.2. Flash a light-emitting diode with the PIC24</a></li>
+<li><a href="#_flash_a_light_emitting_diode_with_the_atmega">5.3. Flash a light-emitting diode with the ATmega</a></li>
+<li><a href="#_set_the_cycle_duration_with_a_variable_pic18">5.4. Set the cycle duration with a variable (PIC18)</a></li>
+<li><a href="#_hello_world_morse_code">5.5. Hello, World: Morse code</a></li>
+</ul>
+</li>
+<li><a href="#_read_and_report_an_analog_voltage">6. Read and report an analog voltage</a>
+<ul class="sectlevel2">
+<li><a href="#_pic18fx6k22">6.1. PIC18FX6K22</a></li>
+<li><a href="#_pic24fv32ka30x">6.2. PIC24FV32KA30X</a></li>
+<li><a href="#_atmega328p">6.3. ATmega328P</a></li>
+</ul>
+</li>
+<li><a href="#_counting_button_presses">7. Counting button presses</a></li>
+<li><a href="#_counting_button_presses_via_interrupts">8. Counting button presses via interrupts</a></li>
+<li><a href="#_scanning_a_4x3_matrix_keypad">9. Scanning a 4x3 matrix keypad</a></li>
+<li><a href="#_communicating_with_spi_devices">10. Communicating with SPI devices</a>
+<ul class="sectlevel2">
+<li><a href="#_pic18fx6k22_2">10.1. PIC18FX6K22</a></li>
+<li><a href="#_pic24fv32ka30x_2">10.2. PIC24FV32KA30X</a></li>
+<li><a href="#_atmega328p_2">10.3. ATmega328P</a></li>
+<li><a href="#_words_to_drive_a_matrix_display">10.4. Words to drive a matrix display</a></li>
+</ul>
+</li>
+<li><a href="#_communicating_with_i2c_devices">11. Communicating with I<sup>2</sup>C devices</a>
+<ul class="sectlevel2">
+<li><a href="#_pic18fx6k22_3">11.1. PIC18FX6K22</a></li>
+<li><a href="#_pic24fv32ka30x_3">11.2. PIC24FV32KA30X</a></li>
+<li><a href="#_atmega328p_3">11.3. ATmega328P</a></li>
+<li><a href="#_notes_on_using_the_words">11.4. Notes on using the words</a></li>
+<li><a href="#_detecting_i2c_devices">11.5. Detecting I<sup>2</sup>C devices</a></li>
+</ul>
+</li>
+<li><a href="#_using_i2c_to_get_temperature_measurements">12. Using I<sup>2</sup>C to get temperature measurements</a></li>
+<li><a href="#_making_high_resolution_voltage_measurements">13. Making high-resolution voltage measurements</a></li>
+<li><a href="#_an_i2c_slave_example">14. An I<sup>2</sup>C slave example</a></li>
+<li><a href="#_speed_of_operationbit_banging">15. Speed of operation&#8201;&#8212;&#8201;bit banging</a>
+<ul class="sectlevel2">
+<li><a href="#_pic18f26k22">15.1. PIC18F26K22</a></li>
+<li><a href="#_pic24fv32ka302">15.2. PIC24FV32KA302</a></li>
+<li><a href="#_atmega328p_4">15.3. ATmega328P</a></li>
+</ul>
+</li>
+<li><a href="#_driving_an_hitachi_44780_lcd_controller">16. Driving an Hitachi-44780 LCD controller</a></li>
+<li><a href="#_references">References</a></li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Modern microcontrollers provide an amazingly diverse selection of hardware
+peripherals, all within a single chip.
+One needs to provide a small amount of supporting hardware to power the chip
+and connect its peripheral devices to the signals of interest and, when powered up,
+these devices need to be configured and monitored by a suitable firmware program.
+These notes focus on programming the 28-pin PIC18F26K22 microcontroller and
+its 40-pin PIC18F46K22 sibling,
+the 16-bit PIC24FV32KA302 and
+the 8-bit AVR ATmega328P.
+These microcontrollers are all available in plastic DIP packages,
+can be run from a 5 volt supply,
+and can be built into very simple prototype hardware.
+A number of example programs, in the Forth language, are provided
+to illustrate the use of some of each microcontroller&#8217;s peripheral devices.
+The examples cover the very simple "flash a LED" exercise through to driving
+a character-based LCD via its 4-bit parallel interface.
+Communication with SPI and I<sup>2</sup>C devices is also covered, with a common set of words
+being used to abstract away the differences between microcontrollers
+in terms of detailed bits and registers.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_a_selection_of_microcontrollers">1. A selection of microcontrollers</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Over the past couple of decades, microcontrollers have evolved to be
+cheap, powerful computing devices that even Mechanical Engineers can
+use in building bespoke instrumentation for their research laboratories.
+Typical tasks include monitoring of analog signals, sensing pulses and
+providing timing signals.
+Of course these things could be done with a modern personal computer
+connected via USB to a commercial data acquisition and signal processing system
+but there are many situations where the small, dedicated microcontroller,
+requiring just a few milliamps of current, performs the task admirably
+and at low cost.</p>
+</div>
+<div class="paragraph">
+<p>Modern microcontrollers provide an amazingly diverse selection of hardware
+peripherals, all within a single chip.
+One needs to provide a small amount of supporting hardware to power the chip
+and connect its peripheral devices to the signals of interest and, when powered up,
+these devices need to be configured and monitored by a suitable firmware program.
+These following sections provide an introduction to the details of doing this
+with an 8-bit Microchip PIC18F26K22 or PIC18F46K22 microcontroller,
+a 16-bit PIC24FV32KA302 microcontroller
+and an 8-bit ATmega328P microcontroller,
+all programmed with the <a href="https://flashforth.com)">FlashForth</a> version 5 interpreter.</p>
+</div>
+<div class="paragraph">
+<p>Within each family of Microchip or Atmel microcontrollers,
+the individual microcontroller units (MCUs) all have the same core,
+<em>i.e.</em> same instruction set and memory organisation.
+Your selection of which MCU to actually use in your project can be based on
+a couple of considerations.
+If you are on a tight budget and will be making many units,
+choose an MCU with just enough functionality, however,
+if convenience of development is more important,
+choose one with "bells and whistles".
+For this tutorial guide, we will value convenience and so
+will work with microcontrollers that have:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>a nice selection of features, including a serial port,
+several timers and an analog-to-digital converter.
+See the feature list and the block diagram of the PIC18F26K22 and
+PIC18F46K22 MCUs on the following pages.</p>
+</li>
+<li>
+<p>a 28-pin narrow or 40-pin DIL package, which is convenient for prototyping and
+has enough I/O pins to play without needing very careful planning.</p>
+</li>
+<li>
+<p>an ability to work as 3.3V or 5V systems.</p>
+</li>
+<li>
+<p>a pinout as shown at the start of the datasheets (books) for each of the microcontrollers.
+You will be reading the pages of these books over and over but we include
+the following couple of pages from the PIC18F22K26/PIC18F46K22 datasheet to give an overview.</p>
+</li>
+<li>
+<p>an internal arrangement that is built around an 8-bit or 16-bit data bus.</p>
+</li>
+<li>
+<p>the ``Harvard architecture'' with separate paths and storage areas for program
+instructions and data.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>We won&#8217;t worry too much about the details of the general-purpose registers,
+the internal static RAM or the machine instruction set because we will let
+the FlashForth interpreter handle most of the details, however,
+memory layout, especially the I/O memory layout is important for us as programmers.
+The peripheral devices, which are used to inferface with the real world,
+are controlled and accessed via registers in the data-memory space.</p>
+</div>
+<div id="features-of-pic18f26k22" class="imageblock">
+<div class="content">
+<img src="../figs/pic18f26k22-features-from-datasheet.svg" alt="pic18f26k22 features from datasheet" width="100%">
+</div>
+<div class="title">Figure 1. Features page from the PIC18F26K22 data sheet.</div>
+</div>
+<div id="block-diagram-pic18f26k22" class="imageblock">
+<div class="content">
+<img src="../figs/pic18f26k22-block-diagram-from-datasheet.svg" alt="pic18f26k22 block diagram from datasheet" width="100%">
+</div>
+<div class="title">Figure 2. Block diagram of the PIC18F26K22 microcontroller.</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_development_boards">2. Development boards</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This tutorial is based around simple support hardware for each of the microcontrollers.
+If you don&#8217;t want to do your own soldering, there are easy-to-buy demonstration boards
+available as a convenient way to get your hardware up and going.
+If you are a student of mechatroncis, however, you must eventually design and build your own hardware.
+The strip-board versions are aimed at you.</p>
+</div>
+<div class="sect2">
+<h3 id="_pic18_family_boards">2.1. PIC18 family boards</h3>
+<div class="paragraph">
+<p>Here is a picture of PICDEM 2 PLUS with PIC18F46K22-I/P in the 40-pin socket (U1)
+and running the LCD, as described in a later section.
+We&#8217;ll make use of the serial RS-232 interface (MAX232ACPA, U3)
+to both program Forth application and to communicate with running applications.
+Other conveniences include on-board LEDs, switches, a potentiometer (RA0)
+and I<sup>2</sup>C devices, such as a TC74 temperature sensor (U5), just below the MCU
+and a 24LC256 serial EEPROM (U4).
+Initial programming of the FlashForth system into the MCU can be done via jack J5
+(labelled ICD in the lower left of the photograph)
+with a Microchip MPLAB-ICD3, PICkit3, or similar device programmer.</p>
+</div>
+<div id="lcd-on-picdem2-board" class="imageblock">
+<div class="content">
+<img src="../figs/picdem2plus-with-46k22-flashforth-5.jpeg" alt="picdem2plus with 46k22 flashforth 5" width="100%">
+</div>
+<div class="title">Figure 3. A PICDEM2 board from Microchip with a PIC18F46K22-I/P microcontroller driving the LCD.</div>
+</div>
+<div class="paragraph">
+<p>If you want a homebrew system,
+you can build a minimal system on strip-board that works well.
+One of the nice things about such a strip-board construction is that you can
+easily continue construction of your bespoke project on the board and,
+with careful construction, your prototype can provide years of reliable service.</p>
+</div>
+<div id="minimal-pic18f26k22-board" class="imageblock">
+<div class="content">
+<img src="../figs/pic18f26k22-demo-board-with-regulator-board-2014.jpeg" alt="pic18f26k22 demo board with regulator board 2014" width="100%">
+</div>
+<div class="title">Figure 4. A minimal PIC18F26K22 system build on strip-board.</div>
+</div>
+<div class="paragraph">
+<p>Here is a detailed view of the home-made demo board with PIC18F26K22 in place.
+This board is suitable for the exercises in this guide.
+A separate regulator board is to the left and a current-limited supply provides the
+input power.
+The board is simple to make by hand, with header pins for the reset switch
+and connections to the LEDs.
+The 4-pin header in the foreground provides an I<sup>2</sup>C connection.
+The ICSP header is only needed to program FlashForth into the MCU, initially.
+All communication with the host PC is then via the TTL-level serial header (labelled FTDI-232)
+at the right.
+Beyond the minimum required to get the microcontroller to function,
+we have current-limiting resistors and header pins on most of the MCU&#8217;s I/O pins.
+This arrangement is convenient for exercises such as interfacing to the 4x3 matrix keypad
+discussed in a later section.</p>
+</div>
+<div class="paragraph">
+<p>The schematic diagram of this home-brew board is shown on the following page.
+Note that there is no crystal oscillator on the board; the internal oscillator is
+sufficiently accurate for asynchronous serial port communication.
+Note, also, the 1k resistors in the TX and RX nets.
+These limit the current going through the microcontroller pin-protection diodes
+in the situation where the microcontroller board is unpowered and the FTDI-232 cable
+is still plugged in to your PC.
+This will happen at some point and, without the current-limiting resistors, the FTDI cable
+will power the microcontroller, probably poorly.</p>
+</div>
+<div id="schematic-pic18f26k22" class="imageblock">
+<div class="content">
+<img src="../figs/demo-board-schematic-26k22.svg" alt="demo board schematic 26k22" width="100%">
+</div>
+<div class="title">Figure 5. A schematic diagram of the minimal board for the PIC18F26K22.</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_avr_and_pic24_boards">2.2. AVR and PIC24 boards</h3>
+<div class="paragraph">
+<p>The Eleven from Freetronics, shown in the left half of the following photograph,
+is an Arduino-compatible board carrying an ATmega328P microcontroller.
+This is a convenient piece of hardware with many prototype-friendly boards
+available to plug into the headers around the periphery of the board.
+Although these boards come with the Arduino bootloader preprogrammed into the
+ATmega328 microcontroller, the standard AVR 6-pin programming header on the
+right-hand end of the board (in the photo) can be used to reprogram the microcontroller
+with the FlashForth interpreter.
+Power and serial port access is through the USB connector at the left.</p>
+</div>
+<div class="paragraph">
+<p>If you want an almost-no-solder option for prototyping with the PIC24FV32KA302,
+Microchip provide the Microstick 5V for PIC24K-series.
+As shown in the following photograph, this is convenient in that it includes
+a programmer on-board and can be plugged into a bread-board.
+The power supply and flash programming access is provided through the USB connector
+on the left of the board while the serial port connection is via the 6-pin connector
+on the right-end of the board.</p>
+</div>
+<div id="eleven-and-microstick" class="imageblock">
+<div class="content">
+<img src="../figs/eleven-and-microstick-boards-2014.jpeg" alt="eleven and microstick boards 2014" width="100%">
+</div>
+</div>
+<div class="paragraph">
+<p>Building a minimal board, by hand, for any of these processors is fairly easy and
+strip-board versions for each is shown in the following photograph.
+The left-hand board is for the PIC18F26K22, before all of the extra protection resistors
+were added.  In this state, FlashForth can already be used on this board for nearly all
+of the exercises in the following sections.
+Schematic diagrams for the PIC24 and AVR microcontrollers are shown on the following pages.</p>
+</div>
+<div id="home_built_minimal_boards" class="imageblock">
+<div class="content">
+<img src="../figs/home-built-minimal-boards-2014.jpeg" alt="home built minimal boards 2014" width="100%">
+</div>
+</div>
+<div class="paragraph">
+<p>Each of the boards has headers for (1) power, (2) in-circuit serial programming,
+(3) I<sup>2</sup>C communication and
+(4) TTL-level-232 serial communication.
+The ATmega328 board on the right has a few more protection resistors installed and has
+an 16\,MHz crystal because serial-port communication was found to be unreliable using the internal oscillator.</p>
+</div>
+<div id="schematic_328" class="imageblock">
+<div class="content">
+<img src="../figs/demo-board-schematic-328.svg" alt="demo board schematic 328" width="100%">
+</div>
+</div>
+<div id="schematic_32ka302" class="imageblock">
+<div class="content">
+<img src="../figs/demo-board-schematic-32ka302.svg" alt="demo board schematic 32ka302" width="100%">
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_flashforth">3. FlashForth</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Forth is a word-based language, in which the data stack is made available to the programmer
+for temporary storage and the passing of parameters to functions.
+Everything is either a number or a word.
+Numbers are pushed onto the stack and words invoke functions.
+The language is simple enough to parse that full, interactive Forth systems may be implemented
+with few (memory) resources.
+Forth systems may be implemented in a few kilobytes of program memory and a few hundred bytes
+of data memory such that it is feasible to provide the convenience of a fully interactive
+program development on very small microcontrollers.</p>
+</div>
+<div class="paragraph">
+<p>The classic beginners book by Brodie<sup><a href="#brodie_1987">1</a></sup> is available online,
+as is Pelc&#8217;s more recent book<sup><a href="#pelc_2011">3</a></sup>.
+A more detailed reference is published by Forth Inc<sup><a href="#conklin_2007">2</a></sup>.
+These books are biased toward Forth running on a personal computer rather than on
+a microcontroller, however, they are a good place to start your reading.
+For an introductory document that is specific to FlashForth,
+see the companion document, Elements of FlashForth 5.</p>
+</div>
+<div class="paragraph">
+<p><a href="https://flashforth.com">FlashForth</a> for the PIC18, PIC24 and ATmega families of microcontrollers
+is a full interpreter and compiler that runs entirely on the microcontroller.
+It is a 16-bit Forth with a byte-addressable memory space.
+Even though there are distinct memory types (RAM, EEPROM and Flash) and
+separate busses for data and program memory in these Harvard-architecture
+microcontrollers, FlashForth unifies them into a single 64kB memory.</p>
+</div>
+<div class="paragraph">
+<p>Above working in assembler, FlashForth does use some resources, both memory and compute cycles,
+but it provides such a nice, interactive environment that these costs are usually returned
+in convenience while tinkering with your hardware.
+Forth programs are very compact so you will have less code to maintain in the long run.
+The interpreter can also be available to the end user of your instrument, possibly
+for making parameter adjustments or for making the hardware versatile by having a
+collection of application functions present simultaneously in the firmware,
+with the user selecting the required function as they wish.</p>
+</div>
+<div class="sect2">
+<h3 id="_getting_flashforth_and_programming_the_mcu">3.1. Getting FlashForth and programming the MCU</h3>
+<div class="paragraph">
+<p>FlashForth is written in assembler, with one program source for each of
+the microcontroller families and a number of Forth text files to augment the
+core interpreter.
+The source code can be downloaded from SourceForge at the URL
+<a href="http://sourceforge.net/projects/flashforth/" class="bare">http://sourceforge.net/projects/flashforth/</a>
+There, you will see that you can get a packaged release or you can clone the git repository.</p>
+</div>
+<div class="paragraph">
+<p>To build from this source, you will need to start up your integrated development environment
+(be it MPLAB, MPLAB-X or AVR Studio), open the program source and config files in this IDE
+and edit the config file(s) to match your selection of oscillator.
+There are other options to customize but the choice of oscillator is the main one.
+The machine code can then be assembled and programmed into your microcontroller with
+a suitable device programmer (PICkit3, ICD3, STK500, AVRISP MkII, &#8230;&#8203;).
+Once programmed with FlashForth, and mounted in a board that provides power and serial
+communications as described in the previous section, you will be ready to interact with
+FlashForth via a serial terminal or shell.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_building_for_the_pic18f26k22_or_pic18f46k22">3.2. Building for the PIC18F26K22 or PIC18F46K22</h3>
+<div class="paragraph">
+<p>For our minimal system with either the PIC18F26K22 or PIC18F46K22 microcontroller,
+we elect to use the internal (16 MHz) oscillator multiplied by 4 by the PLL.
+Within the <code>MPLAB-X</code> development environment,
+we started a new standalone project to build our FlashForth program
+that will use the microcontroller&#8217;s UART serial port as the OPERATOR communications channel.
+Following the prompt screens, we selected a specific processor (PIC18F26K22),
+our hardware tool (ICD3), and the compiler toolchain (mpasm).</p>
+</div>
+<div class="paragraph">
+<p>To build the actual machine code that will be programmed into the flash memory
+of the microcontroller,
+it is sufficient to assemble the principal source file <code>ff-pic18.asm</code>
+along with the configuration (or header) files
+<code>pic18f-main.cfg</code>, <code>pic18fxxxx.cfg</code>, <code>p18f2x4xk22.cfg</code>,
+and use the linker script <code>FF_0000.lkr</code>.
+The source file and config files can be found in the directory <code>pic18/src/</code>,
+while the linker file is in <code>pic18/lkr/</code>.
+There may be other configuration files already added to the project but you can ignore them.</p>
+</div>
+<div class="paragraph">
+<p>We edited the processor-specific config file, <code>p18f2x4xk22.cfg</code>, writing <code>PLLCFG = ON</code>
+to have the PLL enabled (giving F<sub>OSC</sub> = 64 MHz),
+enable the watchdog timer with a 1:256 postscale (<code>WDTPS = 256</code>)
+to get approximately a 1 second time-out period,
+and enable the external reset capability (<code>MCLRE = EXTMCLR</code>).
+Being able to reset the microcontroller by bringing the <code>MCLR</code> pin low is something that
+we find convenient when tinkering with new hardware.
+We set the final line as<br>
+<code>#define PLL ENABLE</code></p>
+</div>
+<div class="paragraph">
+<p>We needed to edit the \verb!pic18f-main.cfg! file only to set the system clock frequency
+as <code>constant clock=d'64000000'</code>.
+With this clock frequency, the microcontroller requires approximately 7 mA current while
+the interpreter is running and waiting for input.</p>
+</div>
+<div class="paragraph">
+<p>There are many other options for customizing the FlashForth program in this file,
+however, the default parameters are fine for the first build of our minimal system.
+To see your options for all of the configuration bits for your specific microcontroller,
+it is convenient to open the MPLAB-X view from the main menu:
+<code>Window</code> &#8594; <code>PIC Memory Views</code> &#8594; <code>Configuration Bits</code>.</p>
+</div>
+<div class="paragraph">
+<p>With the specific microcontroller selected for the project, the config file
+<code>pic18fxxxx.cfg</code> will automatically select the appropriate MPLAB include file for
+the microcontroller, be it <code>p18f26k22.inc</code> for the 28-pin chip on the home-made board
+or <code>p18f46k22.inc</code> for the 40-pin chip on the PICDEM 2 PLUS board.
+If the build process complains of not being able to find the MCU-specific include file,
+you may need to adjust the case-sensitivity of the assembler.
+This check box can be found in the Project Properties dialog,
+under <code>General Options</code> for the <code>mpasmx</code> assembler, as shown in the following screen shot.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../figs/MPLAB-X-mpasm-case-sensitivity.png" alt="MPLAB X mpasm case sensitivity" width="100%">
+</div>
+</div>
+<div class="paragraph">
+<p>The following image shows the result of building in Microchip&#8217;s MPLAB X IDE.
+The lower left frame in the MPLAB-X window shows the MCU resources used.
+With 426 bytes of SRAM used (another 3470 free) and
+8948 bytes of program memory used (56588 free),
+For the PIC18F26K22 MCU, FlashForth occupies only about one-seventh of
+the microcontroller&#8217;s program memory.
+Most of the memory is available for your application.
+For more details on the SRAM memory map,
+see the FlashForth 5 Quick Reference.
+There, Mikael Nordman has provided a memory map that shows how
+the SRAM memory is allocated within the FlashForth system.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../figs/MPLAB-X-build-of-Flash-Forth-for-PIC18F26K22-2016.png" alt="MPLAB X build of Flash Forth for PIC18F26K22 2016" width="100%">
+</div>
+</div>
+<div class="paragraph">
+<p>The final step is to program the FlashForth machine code into the flash memory of the microcontroller,
+using whatever device programmer you happen to have plugged into your development system.
+The Dashboard view in the screen shot above shows that we have seleted to use of the MPLAB ICD3.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_building_for_the_pic24fv32ka302">3.3. Building for the PIC24FV32KA302</h3>
+<div class="paragraph">
+<p>Building for the 16-bit PIC24 family is similar process.
+This time look for the source code files in the <code>pic24/</code> subdirectory.
+There are fewer config files but you may need to customize the closest one for
+your particular processor.
+Here is the required text in the <code>p24fk_config.inc</code> file
+for our PIC24FV32KA302-I/SP microcontroller
+using its internal 8 MHz oscillator with 4X PLL
+and installed on the home-made minimal board:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>;;; Device memory sizes. Set according to your device.
+;;; You can increase the addressable flash range be decreasing the addressable ram.
+;;; Below is the setting for max amount of ram for PIC24FV32KA302
+.equ FLASH_SIZE,     0x5800  ; Flash size in bytes without the high byte
+                             ; See program memory size in the device datasheet.
+.equ RAM_SIZE,       0x0800  ; Ram size in bytes
+.equ EEPROM_SIZE,    0x0200  ; Eeprom size
+
+; For some reason the normal config macros did not work
+           .pushsection __FOSCSEL.sec, code
+           .global __FOSCSEL
+__FOSCSEL: .pword FNOSC_FRCPLL
+           .popsection
+; Start additions for FF Tutorial board with PIC24FV32KA30x
+           .pushsection __FOSC.sec, code
+           .global __FOSC
+__FOSC:    .pword OSCIOFNC_OFF
+           .popsection
+           .pushsection __FICD.sec, code
+           .global __FICD
+__FICD:    .pword ICS_PGx2
+           .popsection
+; End additions
+
+.equ FREQ_OSC, (8000000*4)	 ;Clock (Crystal)frequency (Hz)</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Once programmed, FlashForth uses 542 of the microcontroller&#8217;s 2048 bytes of SRAM and
+4544 of the MCU&#8217;s 11264 words of Flash memory.
+This leaves most of the memory for your Forth application program.
+Although this appears to be a lot less than that available in the PIC18F26K22 MCU,
+this 16-bit MCU has lots of interesting hardware.
+With instruction cycle frequency of 16 MHz and the interpreter waiting for input,
+the current consumption is 7.5 mA, approximately the same as for the 8-bit PIC18F26K22.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_building_for_the_atmega328p">3.4. Building for the ATmega328P</h3>
+<div class="paragraph">
+<p>Assembling the FlashForth program within the AVR Studio IDE is fairly simple but
+Mike Nordman has made life even simpler for users of Arduino-like hardware by providing
+a prebuilt <code>.hex</code> file that can be programmed into the ATmega328P.
+Here is the command for doing so with avrdude on a Linux PC.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ sudo avrdude -p m328p -B 8.0 -c avrisp2 -P usb -e \
+  -U efuse:w:0x07:m \
+  -U hfuse:w:0xda:m \
+  -U lfuse:w:0xff:m \
+  -U flash:w:ff_uno.hex:i</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The fuses are set to use the 16 MHz crystal on the Arduino-like board.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_interacting_with_flashforth">4. Interacting with FlashForth</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Principally, interaction with the programmed MCU is via the serial port.
+For the PIC microcontrollers, settings are 38400 baud 8-bit, no parity, 1 stop bit, with
+software (Xon/Xoff) flow control.
+For the ATmega328P (as programmed above), the baud rate is 9600.</p>
+</div>
+<div class="paragraph">
+<p>The FlashForth distribution includes a couple of shell programs that are
+programmed with some knowledge of the FlashForth interpreter.
+The <code>ff-shell.py</code> program is written in Python and allows interaction
+with the microcontroller via a standard command shell.
+It depends on a Python interpreter and the pyserial extension being installed on your PC.
+The <code>ff-shell.tcl</code> is a GUI program that displays the interaction text in a dedicated window on your PC.
+It requires the Tcl/Tk interpreter which is usually part of a Linux environment but it may be
+installed on MS-Windows or MacOS as well.</p>
+</div>
+<div class="paragraph">
+<p>The following images shows the <code>ff-shell.tcl</code> window just afer sending the content
+of the <code>flash-led.txt</code> file to the PIC18F26K22.
+The device name of <code>/dev/ttyUSB0</code> on the status line refers to the USB-to-serial interface
+that was plugged one of the PC&#8217;s USB ports.
+It is convenient to start the program with the command</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ sudo ./ff-shell.tcl</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If necessary, you can adjust the communication settings by typing new values into the entry boxes
+and pressing <code>Enter</code> to repoen the connection.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../figs/ff-shell-tcl-flash-led-pic18.png" alt="ff shell tcl flash led pic18" width="100%">
+</div>
+</div>
+<div class="paragraph">
+<p>As you type characters into the main text widget, <code>ff-shell.tcl</code> intercepts them and sends them,
+one at a time, via the serial port to the microcontroller.
+As the microcontroller sends characters back, the program filters them and displays them in the text widget.
+There is also a send-file capability that will send the text from the file
+as fast as it can, without overwhelming the microcontroller.
+The Python program <code>ff-shell.py</code> has a special command <code>#send</code> to start the equivalent process.</p>
+</div>
+<div class="paragraph">
+<p>If you have sent the microcontroller off to do a repetitive task, such as flashing the LED indefinitely,
+you can regain the interpreter&#8217;s attention by sending a <code>Control-O</code> character.
+The interpreter aborts the execution of the current word and does a software restart.
+After initialization, the interpreter announces that it is ready to begin.
+Subsequently pressing <code>Enter</code> will get the <code>ok</code> response, as shown below.
+The warm restart action is also available from the menu as <code>Micro</code> &#8594; <code>Warm Restart</code>.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../figs/figs/ff-shell-tcl-control-O-pic18.png" alt="ff shell tcl control O pic18" width="100%">
+</div>
+</div>
+<div class="paragraph">
+<p>We find <code>ff-shell.tcl</code> a very convenient interaction environment, however,
+if you want to use a standard terminal program on Linux or MacOS,</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_introductory_examples">5. Introductory examples</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We begin with examples that demonstrate a small number of features of the MCU
+or of FlashForth.
+Our interest will primarily be in driving the various peripherals of the MCU
+rather than doing arithmetic or dealing with abstract data.</p>
+</div>
+<div class="sect2">
+<h3 id="_flash_a_light_emitting_diode_with_the_pic24">5.1. Flash a light-emitting diode with the PIC24</h3>
+<div class="paragraph">
+<p>The microcontroller version of the "Hello, World" program is typically a program that
+flashes a single LED.
+It will work on either of PIC18F microcontrollers mentioned previously and
+makes use of a digital input-output pin via the registers that control the IO port.
+The manufacturer&#8217;s datasheet has a very readable introduction to the IO ports.
+Please read it.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>-flash-led
+marker -flash-led
+$ff8a constant latb
+$ff93 constant trisb
+: init 1 trisb mclr ; \ want RB0 as output
+: do_output latb c@ 1 xor latb c! ; \ toggle RB0
+: wait #500 ms ;
+: main init begin do_output wait again ;
+main</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Notes on this program:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>If the word <code>-flash-led</code> has been previously defined with the word marker,
+line 1 resets the dictionary state and continues interpreting the file,
+else the interpreter signals that it can&#8217;t find the word and continues interpreting the file anyway.</p>
+</li>
+<li>
+<p>Line 2 records the state of the dictionary and defines the word <code>-flash-led</code>
+so that we can reset the dictionary to its state before the code was compiled,
+simply by executing the word \verb!-flash-led!.</p>
+</li>
+<li>
+<p>Lines 3 and 4 define convenient names for the addresses of
+the special function registers (SFRs) that control IO-port B.
+Note the literal hexadecimal notation with the <code>$</code> character.
+In the PIC18F family, the SFRs appear near the top of the 64k FlashForth memory space.</p>
+</li>
+<li>
+<p>Line 5 is a colon definition for the word \verb!init! that sets up the peripheral
+hardware.
+Here, we set pin RB0 as output.
+The actual command that does the setting is <code>mclr</code>,
+which takes a bit-mask (00000001) and a register address (<code>$ff93</code>)
+and then clears the register&#8217;s bits that have been set in the mask.
+Note the comment starting with the backslash character.
+Although the comment text is sent to the MCU, it is ignored.
+Note, also, the spaces delimiting words.  That spaces after the colon and
+around the semicolon are important.</p>
+</li>
+<li>
+<p>Line 6 is the definition that does the work of fiddling the LED pin.
+We fetch the byte from the port B latch, toggle bit 0 and
+store the resulting byte back into the port B latch.</p>
+</li>
+<li>
+<p>Line 7 defines a word to pause for 500 milliseconds.
+Note the <code>#</code> character for a literal decimal integer.</p>
+</li>
+<li>
+<p>Line 8 defines the "top-level" coordination word, which we have named
+<code>main</code>, following the C-programming convention.
+After initializing the relevant hardware, it unconditionally loops, doing the output
+operation and waiting, each pass.</p>
+</li>
+<li>
+<p>Line 9 invokes the <code>main</code> word and runs the application.
+Pressing the <code>Reset</code> button will trigger a hardware restart,
+kill the application and put the MCU back into a state of listening to the serial port.
+Invoking a warm restart by typing <code>Control-O</code> or selecting the <code>Warm Restart</code>
+menu action in <code>ff-shell.tcl</code> may be a more convenient way to stop the application.
+Typing <code>main</code>, followed by <code>Enter</code> will restart the application.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Instead of going to the bother of tinkering with the MCU IO Port,
+we could have taken a short-cut and used the string writing capability
+of Forth to write a short version that was closer the the operation of
+typical Hello World programs.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>: greet-me ." Hello World" ;
+greet-me</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Before going on to more examples, it is good to know about the word <code>empty</code>.
+This word will reset the dictionary and all of the allotted-memory pointers.
+Because FlashForth does not allow you to redefine words that are already in the dictionary,
+later examples that use the same names for their word definitions,
+may not compile without complaint if you don&#8217;t clean up after each exercise.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_flash_a_light_emitting_diode_with_the_pic24_2">5.2. Flash a light-emitting diode with the PIC24</h3>
+<div class="listingblock">
+<div class="content">
+<pre>-flash-led
+marker -flash-led
+$02c8 constant trisb
+$02cc constant latb
+1 #15 lshift constant bit15
+: init bit15 trisb mclr ; \ set pin as output
+: do_output latb @ bit15 xor latb ! ; \ toggle the bit
+: main init begin do_output #500 ms again ;
+main</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Notes on this program:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>This program for the 16-bit microcontroller is essentially the same as that
+for the 8-bit MCU, with different addresses for the port-control registers, of course.
+In the PIC24/dsPIC30/dsPIC33 version of FlashForth, the special function registers appear
+in the lowest 2k bytes of memory.</p>
+</li>
+<li>
+<p>On line 5, we compute the bit pattern for selecting the MCU pin rather than writing it explicitly.
+We start with a 1 in the least-significant bit of the 16-bit word and then shift it left 15 places,
+to produce the binary value <code>%1000000000000000</code></p>
+</li>
+<li>
+<p>On line 7, we use 16-bit fetch <code>@</code> and store <code>!</code> operations because the
+special function registers for controlling the hardware on this microcontroller are 16 bits wide.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_flash_a_light_emitting_diode_with_the_atmega">5.3. Flash a light-emitting diode with the ATmega</h3>
+<div class="listingblock">
+<div class="content">
+<pre>-flash-led-avr
+marker -flash-led-avr
+\ PB5 is Arduino digital pin 13.
+\ There is a LED attached to this pin on the Freetronics Eleven.
+
+$0024 constant ddrb
+$0025 constant portb
+1 #5 lshift constant bit5
+
+: init bit5 ddrb mset ; \ set pin as output
+: do_output portb c@ bit5 xor portb c! ; \ toggle the bit
+: main init begin do_output #500 ms again ;
+
+main</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Notes on this program:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Again, except for the specific registers and bits,
+this program is the same as for the other MCUs.
+As for other high-level languages, we no longer have to think
+about the specific machine architecture (usually).</p>
+</li>
+<li>
+<p>Because we are using load and store instructions,
+the special function registers start at address <code>$20</code>.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_set_the_cycle_duration_with_a_variable_pic18">5.4. Set the cycle duration with a variable (PIC18)</h3>
+<div class="paragraph">
+<p>We enhance the initial demonstration by making the waiting period setable.
+Because of the interactive FlashForth environment,
+the extra programming effort required is tiny.
+The appearance of the code, however, looks a bit different because we have
+laid out the colon definitions in a different style and have included
+more comments.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>-flash-led-var
+marker -flash-led-var
+\ Flash a LED attached to pin RB0.
+
+$ff8a constant latb
+$ff93 constant trisb
+variable ms_count \ use this for setting wait period.
+
+: init ( -- )
+  1 trisb mclr  \ want RB0 as output
+;
+
+: do_output ( -- )
+  latb c@ 1 xor latb c!  \ toggle RB0
+;
+
+: wait ( -- )
+  ms_count @ ms
+;
+
+: main ( n -- )
+  ms_count !  \ store for later use in wait
+  init
+  begin
+    do_output
+    wait
+  again
+;
+
+#500 main  \ exercise the application</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Notes on this program:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>If the file has been sent earlier defining the application&#8217;s words,
+line 1 resets the state of the dictionary to forget those previous definitions.
+This makes it fairly convenient to have the source code open in an editing window
+(say, using <code>emacs</code>) and to simply reprogram the MCU by resending the file
+(with the <code>Send-File</code> menu item in <code>ff-shell.tcl</code>).</p>
+</li>
+<li>
+<p>Line 7 defines a 16-bit variable <code>ms_count</code>.</p>
+</li>
+<li>
+<p>Line 30 leaves the wait period on the stack before invoking the <code>main</code> word.</p>
+</li>
+<li>
+<p>On each pass through the <code>wait</code> word, the 16-bit value is fetched from</p>
+</li>
+<li>
+<p><code>ms_count</code> and is used to determine the duration of the pause.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_hello_world_morse_code">5.5. Hello, World: Morse code</h3>
+<div class="paragraph">
+<p>Staying with the minimal hardware of just a single LED attached to pin RB0
+on the PIC18F26K22 or PIC18F46K22,
+we can make a proper "Hello World" application.
+The following program makes use of Forth&#8217;s colon definitions so that we can
+spell the message directly in source code and
+have the MCU communicate that message in Morse code.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>-hello-world
+marker -hello-world
+\ Flash a LED attached to pin RB0, sending a message in Morse-code.
+
+$ff8a constant latb
+$ff93 constant trisb
+variable ms_count \ determines the timing.
+
+: init ( -- )
+  1 trisb mclr  \ want RB0 as output
+  1 latb mclr   \ initial state is off
+;
+
+: led_on 1 latb mset ;
+: led_off 1 latb mclr ;
+: gap ms_count @ ms ; \ pause period
+: gap2 gap gap ;
+: dit led_on gap led_off gap2 ;
+: dah led_on gap2 led_off gap2 ;
+
+\ Have looked up the ARRL CW list for the following letters.
+: H dit dit dit dit ;
+: e dit ;
+: l dit dit ;
+: o dah dah dah ;
+: W dit dah dah ;
+: r dit dah dit ;
+: d dah dit dit ;
+
+: greet ( -- )
+  H e l l o  gap  W o r l d  gap2
+;
+
+: main ( n -- )
+  ms_count !  \ store for later use in gap
+  init
+  begin
+    greet
+  again
+;
+
+#100 main  \ exercise the application</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_read_and_report_an_analog_voltage">6. Read and report an analog voltage</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_pic18fx6k22">6.1. PIC18FX6K22</h3>
+<div class="paragraph">
+<p>Use of the analog-to-digital converter (ADC) is a matter of, first,
+reading Section 17 of the PIC18F2X/4XK22 datasheet,
+setting the relevant configuration/control registers and then giving it a poke
+when we want a measurement.
+Again, the interactive nature of FlashForth makes the reporting
+of the measured data almost trivial.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>-read-adc
+marker -read-adc
+\ Read and report the analog value on RA0/AN0.
+
+\ Registers of interest on the PIC18F26K22
+$ffc4 constant adresh
+$ffc3 constant adresl
+$ffc2 constant adcon0
+$ffc1 constant adcon1
+$ffc0 constant adcon2
+$ff92 constant trisa
+$ff38 constant ansela
+
+: init ( -- )
+  1 trisa mset \ want RA0 as input
+  1 ansela mset
+  %00000000 adcon1 c! \ ADC references Vdd, Vss
+  %10101111 adcon2 c! \ right-justified, 12-TAD acq-time, FRC
+  %00000001 adcon0 c! \ Power on ADC, looking at AN0
+;
+
+: adc@ ( -- u )
+  %10 adcon0 mset \ Start conversion
+  begin %10 adcon0 mtst 0= until \ Wait until DONE
+  adresl @
+;
+
+: wait ( -- )
+  #500 ms
+;
+
+: main ( -- )
+  init
+  begin
+    adc@ u.
+    wait
+  key? until
+;
+
+\ Exercise the application, writing digitized values periodically
+\ until any key is pressed.
+decimal
+main</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Notes on this program:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Although not much needs to be done to set up the ADC,
+you really should read the ADC section of the datasheet
+to get the full details of this configuration.</p>
+</li>
+<li>
+<p>Lines 17 to 19 uses binary literals (with the <code>%</code> character)
+to show the configuration bits explicitly.</p>
+</li>
+<li>
+<p>Line 24 conditionally repeats testing of the DONE bit for the ADC.</p>
+</li>
+<li>
+<p>Line 25 fetches the full 10-bit result and leaves it on the stack
+for use after the <code>adc@</code> word has finished.
+Because of the selected configuration of the ADC peripheral,
+the value will be right-justified in the 16-bit cell.</p>
+</li>
+<li>
+<p>Line 35 invokes the <code>adc@</code> word and prints the numeric result.</p>
+</li>
+<li>
+<p>Line 37 checks if a character has come in from the serial terminal.
+If so, the loop is terminated and the main function returns control to
+the FlashForth interpreter.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_pic24fv32ka30x">6.2. PIC24FV32KA30X</h3>
+<div class="paragraph">
+<p>The analog-to-digital converter on the PIC24-series microcontrollers is a little more complex
+than that on the PIC18 series.
+There are more features to select and so there are more registers and bits to set, however,
+the essential set-up tasks are similar.
+The following script sets up some word definitions that were developed with a view to using them
+in a larger program.
+The particular words are more verbose but also carry more information.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>-read-adc
+marker -read-adc
+\ Read and report the analog values on AN0 through AN3.
+
+\ Registers of interest on the PIC24FV32KA30x
+$0084 constant ifs0
+
+$02c0 constant trisa
+$02c2 constant porta
+$02c4 constant lata
+$02c6 constant odca
+
+$02c8 constant trisb
+$02ca constant portb
+$02cc constant latb
+$02ce constant odcb
+
+$0300 constant adc1buf0
+$0340 constant ad1con1
+$0342 constant ad1con2
+$0344 constant ad1con3
+$0348 constant ad1chs
+
+$04e0 constant ansa
+$04e2 constant ansb
+
+$0770 constant pmd1
+
+\ bit masks
+$0001 constant mADC1MD \ pmd1
+$0001 constant mDONE \ ad1con1
+$0002 constant mSAMP
+$8000 constant mADON
+$2000 constant mAD1IF
+
+
+: adc.init ( -- )
+  $0003 trisa mset \ want RA0, RA1 as input
+  $0003 ansa mset
+  $0003 trisb mset
+  $0003 ansb mset
+  mADC1MD pmd1 mclr \ ensure module enabled
+  $0470 ad1con1 ! \ 12-bit, auto-convert
+  $0000 ad1con2 ! \ ADC references Vdd, Vss
+  $9f00 ad1con3 ! \ ADRC, 31-TAD acq-time
+  $0000 ad1chs ! \ neg input is Vss, pos input AN0
+  mADON ad1con1 mset \ Power on ADC
+  mAD1IF ifs0 mclr
+;
+
+: adc.close ( -- )
+  mADON ad1con1 mclr
+  mAD1IF ifs0 mclr
+;
+
+: adc.select ( u -- ) \ select positive input
+  $0003 and ad1chs ! \ limit selection to AN0 through AN3
+;
+
+: adc@ ( -- u )
+  mDONE ad1con1 mclr
+  mSAMP ad1con1 mset \ Start sampling
+  begin mDONE ad1con1 mtst until \ Wait until done.
+  adc1buf0 @
+;
+
+: adc@.filter ( -- u )
+  0 \ start of sum
+  8 for adc@ + next
+  8 /
+;
+
+: wait ( -- )
+  #500 ms
+;
+
+: adc.test ( -- )
+  adc.init
+  begin
+    0 adc.select adc@.filter u.
+    1 adc.select adc@.filter u.
+    cr
+    wait
+  key? until
+  adc.close
+;
+
+\ Exercise the application, writing digitized values periodically
+\ until any key is pressed.
+\ decimal
+\ adc.test</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Notes on this program:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>This script was part of a larger application for the monitoring of 2 pressure transducers,
+hence the setting up of just RA0 and RA1 at the start of <code>adc.init</code> at lines 38&#8212;&#8203;41.</p>
+</li>
+<li>
+<p>To save power the peripheral modules of a PIC24 are, by default, disabled.
+You need to clear a module&#8217;s disable bit (line 42) to do anything with it,
+even setting configuration registers.
+The (separate) power-on bit still needs to be set to start up the converter.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_atmega328p">6.3. ATmega328P</h3>
+<div class="paragraph">
+<p>Although the analog-to-digital converter on the ATmega328P is different in detail,
+it has essentially the same functionality that can be abstracted.
+To control the ADC module, we can set up the same words
+(<code>adc.init</code>, <code>adc.close</code>, <code>adc.select</code> and <code>adc@</code>)
+as for the PIC24FV32KA302.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>-read-adc
+marker -read-adc
+\ Read and report analog voltages
+
+\ Registers of interest on the ATmega328P
+$78 constant adcl
+$79 constant adch
+$7a constant adcsra
+$7b constant adcsrb
+$7c constant admux
+$7e constant didr0
+
+\ Bit masks
+%10000000 constant mADEN
+%01000000 constant mADSC
+%00010000 constant mADIF
+
+: adc.clear.iflag ( -- )
+  mADIF adcsra mset \ clear by writing 1
+;
+
+: adc.init ( -- )
+  $3f didr0 c! \ Disable digital inputs 5 through 0
+  $40 admux c! \ AVcc as ref, right-adjust result, channel 0
+  $06 adcsra c! \ single conversion mode, prescaler 64
+  mADEN adcsra mset \ enable ADC
+  adc.clear.iflag
+;
+
+: adc.close ( -- )
+  mADEN adcsra mclr
+  adc.clear.iflag
+;
+
+: adc.wait ( -- )
+  begin mADSC adcsra mtst 0= until
+;
+
+: adc.select ( u -- )
+  adc.wait
+  $0f and \ channel selected by lower nibble
+  admux c@ $f0 and \ fetch upper nibble
+  or admux c!
+;
+
+: adc@ ( -- u )
+  adc.wait
+  mADSC adcsra mset
+  adc.wait
+  adcl c@ adch c@ #8 lshift or
+  adc.clear.iflag
+;
+
+: adc.test ( -- ) \ Exercise the analog converter
+  adc.init
+  begin
+    0 adc.select adc@ ." adc0 " u.
+    1 adc.select adc@ ." adc1 " u.
+    cr
+    #500 ms
+  key? until
+  adc.close
+;
+
+\ Now, start up the application...
+\ decimal
+\ adc.test</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Notes on this program:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Although there are 6 analog pins available, the test word only exercises channels 0 and 1.</p>
+</li>
+<li>
+<p>The input channel selection is controlled by the lower bits in the <code>admux</code> register.
+Other than the 6 external analog input pins, you can select:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>the temperature sensor with bit pattern <code>%1000</code>,</p>
+</li>
+<li>
+<p>the internal band-gap reference with <code>%1110</code>, and</p>
+</li>
+<li>
+<p>and the zero-volt rail (GND) with <code>%1111</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_counting_button_presses">7. Counting button presses</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Example of sensing a button press, with debounce in software.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>\ Use a push-button on RB0 to get user input.
+\ This button is labelled S3 on the PICDEM2+ board.
+-pb-demo
+marker -pb-demo
+
+$ff81 constant portb
+$ff8a constant latb
+$ff93 constant trisb
+
+variable count
+
+: init ( -- )
+  %01 trisb mset \ RB0 as input
+  %10 trisb mclr \ RB1 as output
+  %10 latb mclr
+;
+: RB1toggle ( -- )
+  latb c@ %10 xor latb c!
+;
+: RB0@ ( -- c )
+  portb c@ %01 and
+;
+: button? ( -- f )
+  \ Check for button press, with software debounce.
+  \ With the pull-up in place, a button press will give 0.
+  RB0@ if
+    0
+  else
+    #10 ms
+    RB0@ if 0 else -1 then
+  then
+;
+
+: main ( -- )
+  0 count !
+  init
+  begin
+    button? if
+      RB1toggle
+      count @ 1+ count !
+      count @ .
+      #200 ms \ allow time to release button
+    then
+    cwd
+  key? until
+;
+
+main  \ exercise the application</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Notes on this program:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The <code>main</code> word clears the <code>count</code> variable, calls <code>init</code> to set up the hardware
+and then loops, polling <code>RB0</code> and incrementing value of the <code>count</code> variable only when
+the button gets pressed.</p>
+</li>
+<li>
+<p>If the pause after acknowledging the button press (line 42) is too long,
+we may lose later button press events.
+This depends on how frantically we press S3.</p>
+</li>
+<li>
+<p>Line 44 resets the watch-dog timer on each pass of the main loop.
+If we don&#8217;t press the RB0 button for a long time, the main loop would not otherwise pause
+and clear the watch-dog timer.
+The watch-dog timer is cleared inside the <code>ms</code> word, however,
+if the timer expires before being cleared, the microcontroller would be reset
+and the FlashForth interpreter would restart.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_counting_button_presses_via_interrupts">8. Counting button presses via interrupts</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Instead of polling the RB0 pin attached to the push button, as in the previous example,
+let&#8217;s set up the hardware interrupt mechanism to invoke the increment action for us.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>\ Use a push-button on RB0 to get user input, via an interrupt.
+\ This button is labelled S3 on the PICDEM2+ board.
+\ Don't have J6 connected because the LED on RB0 loads the pull-up.
+
+-pb-interrupt
+marker -pb-interrupt
+
+$ff93 constant trisb
+$fff2 constant intcon
+$fff1 constant intcon2
+
+variable count
+variable last-count
+
+: int0-irq
+  [i
+    %10 intcon mtst \ INT0IF
+    if
+      count @ 1+ count !
+      %10 intcon mclr
+    then
+  i]
+;i
+
+: init ( -- )
+  %01 trisb mset \ RB0 as input, a button press will give 0.
+  %01000000 intcon2 mclr \ interrupt on falling edge
+  ['] int0-irq 0 int! \ install service word
+  %10 intcon mclr \ INT0IF cleared
+  %10000 intcon mset \ INT0 interrupt enable
+;
+
+: main ( -- )
+  0 count !
+  init
+  begin
+    count @ last-count @ - \ change?
+    if
+      count @ dup last-count ! .
+    then
+    cwd
+  key? until
+;
+
+main  \ exercise the application</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Notes on this program:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Again, we use the variable named <code>count</code> as the variable to be incremented
+on pressing the button that pulls RB0 low.
+The actual increment is done on line 19, inside the interrupt service word <code>int0-irq</code>.
+The second variable, <code>last-count</code>, is used on line 36 in the <code>main</code> word,
+to detect when the <code>count</code> variable changes.</p>
+</li>
+<li>
+<p>The <code>init</code> word sets up the bits to enable the <code>INT0</code> external interrupt
+to fire on a falling edge at RB0.</p>
+</li>
+<li>
+<p>On line 28 in the <code>init</code> word, the execution token for our interrupt service word
+is stored as the high-priority interrupt vector.
+Because FlashForth supports only high-priority interrupts, the <code>0</code> is a dummy value
+but is still expected by the <code>int!</code> word.</p>
+</li>
+<li>
+<p>Inside the interrupt-service word, we need to test the <code>INT0IF</code> interrupt flag
+to see if it is our interrupt to handle and, if it is, do the appropriate work
+(of incrementing the <code>count</code> variable) and clearing the interrupt flag.
+If you enable several interrupt sources, you need to provide a test and action for each.</p>
+</li>
+<li>
+<p>The <code>main</code> word clears the <code>count</code> variable, calls <code>init</code> to set up the interrupt
+mechanism and then loops, emitting the value of the <code>count</code> variable only when it changes.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_scanning_a_4x3_matrix_keypad">9. Scanning a 4x3 matrix keypad</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We connect a 4x3 matrix keypad to PORTB, using RB0, RB1 and RB2 to drive the columns
+while sensing the rows with RB4 through RB7.
+The schematic figure below shows the arrangement of keys and pins.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../figs/keypad-4x3-portb.svg" alt="keypad 4x3 portb" width="40%">
+</div>
+</div>
+<div class="paragraph">
+<p>To minimize hardware, we have used the weak pull-ups on PORTB.
+Pressing a key while its column wire is held high does nothing, however,
+pressing a key on a column that is held low will result in its row
+being pulled low.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>-keypad
+marker -keypad
+\ Display key presses from a 4x3 (telephone-like) keypad
+\ on PIC18F26K22-I/SP
+
+$ff81 constant portb
+$ff8a constant latb
+$ff93 constant trisb
+$ff39 constant anselb
+$ff61 constant wpub
+$fff1 constant intcon2
+
+: init ( -- )
+  0 latb c!
+  %00000000 anselb c!    \ set as all digital I/O pins
+  %11110000 trisb c!     \ RB7-4 as input, RB3-0 as output
+  %11110000 wpub c!      \ pull-ups on RB7-4
+  %10000000 intcon2 mclr \ turn on pull-ups
+;
+
+flash
+create key_chars
+  char 1 c, char 2 c, char 3 c,
+  char 4 c, char 5 c, char 6 c,
+  char 7 c, char 8 c, char 9 c,
+  char * c, char 0 c, char # c,
+create key_scan_bytes
+  $7e c, $7d c, $7b c,
+  $be c, $bd c, $bb c,
+  $de c, $dd c, $db c,
+  $ee c, $ed c, $eb c,
+ram
+
+: scan_keys ( -- c )
+  \ Return ASCII code of key that is pressed
+  #12 for
+    key_scan_bytes r@ + c@
+    dup
+    latb c!
+    portb c@
+    = if
+      \ key must be pressed to get a match
+      key_chars r@ + c@
+      rdrop
+      exit
+    then
+  next
+  0  \ no key was pressed
+;
+
+: keypad@ ( -- c )
+  \ Read keypad with simple debounce.
+  \ ASCII code is left on stack.
+  \ Zero is returned for no key pressed or inconsistent scans.
+  scan_keys dup
+  #20 ms
+  scan_keys
+  = if exit else drop then
+  0 \ inconsistent scan results
+;
+
+: main ( -- )
+  init
+  begin
+    keypad@
+    dup
+    0= if
+      drop  \ no key pressed
+    else
+      emit
+      #300 ms \ don't repeat key too quickly
+    then
+  key? until
+;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Notes on this program:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>In lines 21&#8212;&#8203;31, we make use of character arrays to store (into the program memory)
+the the ASCII code and the scan code for each key.
+The scan code is made up of the 3-bit column pattern to be applied to RB2-RB0 and the
+resulting 4-bit row-sense pattern (RB7-RB4) expected for the particular key if it is pressed.
+RB3 is maintained high (and is of no consequence) for this 3-column keypad, however,
+it would be used for a 4x4 keypad.</p>
+</li>
+<li>
+<p>Lines 36 and 47 make use of the for&#8212;&#8203;next control construct to work through
+the set of 12 scan codes.</p>
+</li>
+<li>
+<p>We should go further by making use a state-machine
+and also keeping track of the last key pressed.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_communicating_with_spi_devices">10. Communicating with SPI devices</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The photograph below shows the Eleven AVR board driving a matrix display.
+This particular display board has an 8-by-8 LED matrix being controlled by
+a MAX7219 8-digit LED display driver.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../figs/eleven-driving-MAX7219-LED-matrix.jpeg" alt="eleven driving MAX7219 LED matrix" width="100%">
+</div>
+</div>
+<div class="paragraph">
+<p>The MAX7219 has a serial data interface that can be driven by the SPI module
+within each of the microcontrollers.
+The timing diagram, taken directly from the MAXIM datasheet,
+is shown below, along with the expect format for each 16-bit command.
+A command can be sent to the MAX7219 chip by taking the chip-select line low,
+sending two bytes via the SPI module and then taking the chip-select line high.
+A set of words for doing this 2-byte transfer and building the higher-level commands
+on top of that transfer is given after.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../figs/max7219-timing-diagram.svg" alt="max7219 timing diagram" width="100%">
+</div>
+</div>
+<div class="paragraph">
+<p>The following sections define the words for using SPI peripherals for each of the microcontrollers
+in master mode.
+The SPI module is initialized for mode 0 operation, with clock signal idling low,
+and data lines changing as the clock signal transitions from active to idle.
+This suits the MAX7219, which samples the data as the clock signal transitions from idle to active.
+These words provide abstract the hardware registers and bits to provide a common vocabulary
+for the interaction with SPI slave devices.</p>
+</div>
+<div class="sect2">
+<h3 id="_pic18fx6k22_2">10.1. PIC18FX6K22</h3>
+<div class="listingblock">
+<div class="content">
+<pre>\ spi2-base-k22.txt
+\ Words to drive the SPI2 module on the PIC18F26K22
+\ PJ 31-Jan-2016
+-spi2-base
+marker -spi2-base
+
+\ Registers of interest for MSSP2
+$ff39 constant anselb
+$ff61 constant wpub
+$ff69 constant ssp2con3
+$ff6c constant ssp2con1
+$ff6d constant ssp2stat
+$ff6e constant ssp2add
+$ff6f constant ssp2buf
+$ff81 constant portb
+$ff8a constant latb
+$ff93 constant trisb
+$ffa4 constant pir3
+$fff1 constant intcon2
+
+\ bit masks
+%0001 constant mSS2 ( RB0 )
+%0010 constant mSCK2 ( RB1 )
+%0100 constant mSDI2 ( RB2 )
+%1000 constant mSDO2 ( RB3 )
+$80 constant mRBPU
+$80 constant mSSP2IF
+$20 constant mSSP2EN
+
+\ !SS2 is on RB0
+: spi.select ( -- ) mSS2 latb mclr ;
+: spi.deselect ( -- ) mSS2 latb mset ;
+
+: spi.init ( -- ) \ set up SPI2 as master
+  $0f anselb mclr \ enable digital for RB3 through RB0
+  mSCK2 trisb mclr \ SCK as output
+  mSCK2 latb mclr \ clock idles low
+  mSDO2 trisb mclr \ MOSI as output
+  mSDI2 trisb mset \ MISO as input
+  $04 wpub c! \ activate pull-up on MISO (RB2) only
+  mRBPU intcon2 mclr \ enable pull-ups
+  mSS2 trisb mclr \ SS2 as output
+  mSS2 latb mset \ deselect
+  %01000000 ssp2stat c! \ SMP=0 CKE=1
+  %00100010 ssp2con1 c! \ enable, CKP=0, Fosc/64
+  mSSP2IF pir3 mclr
+  ssp2buf c@ drop \ will clear BF
+;
+: spi.close ( -- )
+  mSSP2EN ssp2con1 mclr
+  mSSP2IF pir3 mclr
+;
+: spi.wait ( -- )
+  begin mSSP2IF pir3 mtst until
+  mSSP2IF pir3 mclr
+;
+: spi.cexch ( c1 -- c2 ) ssp2buf c! spi.wait ssp2buf c@ ;
+: spi.csend ( c1 -- ) spi.cexch drop ;
+
+: spi.test ( -- )
+  spi.init
+  spi.select
+  $1c spi.csend \ an arbitrary byte
+  spi.deselect
+  spi.close
+;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Notes on this program:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>For the PIC18F26K22, we choose to use the second SPI module
+because we have the pins associated with the first module assigned to the I<sup>2</sup>C communications.</p>
+</li>
+<li>
+<p>Lines 40 and 41 activate the weak pull-up for the MISO pin.
+Some slave devices, such as the MAX7219, do not have a data-out pin to talk back to the master.</p>
+</li>
+<li>
+<p>The key word <code>spi.cexch</code> starts the exchange of a byte by writing it to the SPI data buffer.
+On completion of the transfer, detected by the interrupt flag going high,
+the incoming byte is fetched from the same buffer.
+If there is no data line connected to the MISO pin, a byte of all 1s will be returned.
+If you know that is the expected, it may be convenient to use the <code>spi.csend</code> which
+does the same exchange but then drops the incoming byte.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_pic24fv32ka30x_2">10.2. PIC24FV32KA30X</h3>
+<div class="listingblock">
+<div class="content">
+<pre>\ spi1-base-pic24fv32ka302.txt
+\ Words to drive the SPI1 module on the PIC24FV32KA302
+\ PJ 01-Feb-2016
+-spi1-base
+marker -spi1-base
+
+\ Registers of interest for SPI1
+$0070 constant cnpu2 \ CN16PUE is bit 0
+$0084 constant ifs0 \ SPI1IF is bit 10
+$02c8 constant trisb
+$02ca constant portb
+$02cc constant latb
+$02ce constant odcb
+$0240 constant spi1stat
+$0242 constant spi1con1
+$0244 constant spi1con2
+$0248 constant spi1buf
+$04e2 constant ansb
+$0770 constant pmd1 \ SPI1MD is bit 3
+
+\ bit masks
+$8000 constant mSS1 ( RB15 )
+$0800 constant mSCK1 ( RB11 )
+$0400 constant mSDI1 ( RB10 )
+$2000 constant mSDO1 ( RB13 )
+$0400 constant mSPI1IF
+$8000 constant mSPIEN
+$0040 constant mSPIROV
+
+\ !SS1 is on RB15
+: spi.select ( -- ) mSS1 latb mclr ;
+: spi.deselect ( -- ) mSS1 latb mset ;
+
+: spi.init ( -- ) \ set up SPI1 as master
+  $ac ansb mclr \ enable digital for RB15,13,11,10
+  mSCK1 trisb mclr \ SCK as output
+  mSCK1 latb mclr \ clock idles low
+  mSDO1 trisb mclr \ MOSI as output
+  mSDI1 trisb mset \ MISO as input
+  $0001 cnpu2 ! \ activate pull-up on MISO (SDI1/CN16/RB10) only
+  mSS1 trisb mclr \ SS1 as output
+  mSS1 latb mset \ deselect
+  $0004 pmd1 mclr \ allow the module to be used
+  $013d spi1con1 ! \ MODE16=0, SMP=0 CKE=1, CKP=0, MSTEN=1
+                   \ sec-prescale 1:1, pri-prescale 16:1
+  $0000 spi1con2 ! \ legacy mode
+  mSPIROV spi1stat mclr
+  mSPIEN spi1stat mset \ enable module
+  mSPI1IF ifs0 mclr
+;
+: spi.close ( -- )
+  mSPIEN spi1stat mclr
+  mSPI1IF ifs0 mclr
+;
+: spi.wait ( -- )
+  begin mSPI1IF ifs0 mtst until
+  mSPI1IF ifs0 mclr
+;
+: spi.cexch ( c1 -- c2 ) spi1buf c! spi.wait spi1buf c@ ;
+: spi.csend ( c1 -- ) spi.cexch drop ;
+
+: spi.test ( -- )
+  spi.init
+  spi.select
+  $1c spi.csend \ an arbitrary byte
+  spi.deselect
+  spi.close
+;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Notes on this program:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>On this microcontroller, we choose to use the first SPI module, again because
+it results in a convenient set of pins.
+A later section in this tutorial uses the I<sup>2</sup>C pins on RB5 and RB6.</p>
+</li>
+<li>
+<p>On lines 43 through 46, the SPI1 module is configured to behave much like the
+8-bit SPI module on the PIC18F26K22.
+If we didn&#8217;t care about making a common set of words for the three example processors
+in this tutorial guide,
+we would probably make use of the advanced features on this 16-bit microcontroller.
+These features include 16-bit transfer and enhanced buffering.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_atmega328p_2">10.3. ATmega328P</h3>
+<div class="listingblock">
+<div class="content">
+<pre>\ spi-base-avr.txt
+\ Words to drive the SPI module on the ATmega328P
+\ PJ 31-Jan-2016
+-spi-base
+marker -spi-base
+
+\ Registers of interest
+$24 constant ddrb
+$25 constant portb
+$4c constant spcr
+$4d constant spsr
+$4e constant spdr
+
+\ bit masks
+%000100 constant mSS ( PB2 )
+%001000 constant mMOSI ( PB3 )
+%010000 constant mMISO ( PB4 )
+%100000 constant mSCK ( PB5 )
+$80 constant mSPIF
+$40 constant mWCOL
+
+\ !SS is on PB2
+: spi.select ( -- ) mSS portb mclr ;
+: spi.deselect ( -- ) mSS portb mset ;
+
+: spi.init ( -- )
+  mSCK ddrb mset \ SCK as output
+  mSCK portb mclr \ clock idles low
+  mMOSI ddrb mset \ MOSI as output
+  mMISO ddrb mclr \ MISO as input
+  mMISO portb mset \ activate pull-up on MISO
+  mSS ddrb mset \ SS as output
+  mSS portb mset \ deselect
+  $51 spcr c! \ enable as master with cpolarity 0, cphase 0, fosc/16
+  $00 spsr c! \ SPI2X=0 for fosc/16
+  spsr c@ drop spdr c@ drop \ will clear SPIF
+;
+: spi.close ( -- )
+  $00 spcr c!
+;
+: spi.wait ( -- ) begin mSPIF spsr mtst until ;
+: spi.cexch ( c1 -- c2 ) spdr c! spi.wait spdr c@ ;
+: spi.csend ( c1 -- ) spi.cexch drop ;
+
+: spi.test ( -- )
+  spi.init
+  spi.select
+  $1c spi.csend \ an arbitrary byte
+  spi.deselect
+  spi.close
+;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here is a screenshot showing the record of the SPI communication pins on the ATmega328P
+as it sends the single byte <code>0c</code>, as specified in the <code>spi-test</code> word.
+The SPI clock period is 1 microsecond.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../figs/eleven-spi-test-avr-sending-0c-byte.png" alt="eleven spi test avr sending 0c byte" width="100%">
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_words_to_drive_a_matrix_display">10.4. Words to drive a matrix display</h3>
+<div class="paragraph">
+<p>Given the base words defined in the previous sections, any of the boards may drive the
+matrix display with the following words.
+The interesting commands are defined by line 20 and
+the <code>disp-test-X</code> words are three examples of doing something with the display.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>\ led-matrix-display.txt
+\ Drive a MAX7219 display chip with 8x8 LED matrix
+-disp-max7219
+marker -disp-max7219
+
+: max7219.send ( c1 c2 -- )
+  swap spi.select spi.csend spi.csend spi.deselect
+;
+
+: disp.normal ( -- ) $0c $01 max7219.send ;
+: disp.shutdown ( -- ) $0c $00 max7219.send ;
+
+: disp.test.on ( -- ) $0f $01 max7219.send ;
+: disp.test.off ( -- ) $0f $00 max7219.send ;
+
+: disp.no.op ( -- ) $00 $00 max7219.send ;
+: disp.intensity ( c -- ) $0a swap max7219.send ;
+: disp.decode ( c -- ) $09 swap max7219.send ;
+: disp.scan.limit ( c -- ) $0b swap max7219.send ;
+: disp.set.digit ( cbits cdigit -- ) swap max7219.send ;
+
+: disp-test-1 ( -- ) \ all LEDs on full, 232mA needed
+  spi.init
+  disp.test.on
+  begin key? until
+  disp.test.off
+  spi.close
+;
+: disp-test-2 ( -- ) \ left 4 LEDs on first row, 42mA needed
+  spi.init
+  disp.normal
+  $03 disp.intensity
+  $00 disp.scan.limit
+  $f0 $01 disp.set.digit
+  begin key? until
+  disp.shutdown
+  spi.close
+;
+: disp-test-3 ( -- ) \ draw face, 18mA needed
+  spi.init
+  disp.normal
+  $01 disp.intensity
+  $07 disp.scan.limit
+  %00000000 $01 disp.set.digit
+  %01100110 $02 disp.set.digit
+  %00000000 $03 disp.set.digit
+  %00011000 $04 disp.set.digit
+  %00011000 $05 disp.set.digit
+  %10000001 $06 disp.set.digit
+  %01000010 $07 disp.set.digit
+  %00111100 $08 disp.set.digit
+  begin key? until
+  disp.shutdown
+  spi.close
+;</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_communicating_with_i2c_devices">11. Communicating with I<sup>2</sup>C devices</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Here are some words for using I<sup>2</sup>C (or Two-wire) peripherals for each of the microcontrollers
+in master mode.
+These words provide abstract the hardware registers and bits to provide a common vocabulary
+for the interaction with I<sup>2</sup>C slave devices.</p>
+</div>
+<div class="sect2">
+<h3 id="_pic18fx6k22_3">11.1. PIC18FX6K22</h3>
+<div class="listingblock">
+<div class="content">
+<pre>\ i2c-base-k22.txt
+\ Low-level words for I2C master on PIC18F26K22
+\
+\ Modelled on the original i2c-base.txt for PIC18,
+\ i2c-twi.frt from amforth and
+\ the datasheet for Microchip PIC18F26K22.
+\ Peter J.  2014-11-08
+
+-i2c-base-k22
+marker -i2c-base-k22
+hex ram
+
+\ Registers related to I2C operation of MSSP1
+$ff3a constant anselc
+$ff82 constant portc
+$ff8b constant latc
+$ff94 constant trisc
+$ff9e constant pir1
+$ffc5 constant ssp1con2
+$ffc6 constant ssp1con1
+$ffc7 constant ssp1stat
+$ffc8 constant ssp1add
+$ffc9 constant ssp1buf
+$ffca constant ssp1msk
+$ffcb constant ssp1con3
+
+\ Masks for bits
+%00000001 constant mSEN \ in ssp1con2
+%00000010 constant mRSEN
+%00000100 constant mPEN
+%00001000 constant mRCEN
+%00010000 constant mACKEN
+%00100000 constant mACKDT
+%01000000 constant mACKSTAT
+%00100000 constant mSSP1EN \ in ssp1con1
+%00000001 constant mBF \ in ssp1stat
+%00001000 constant mSSP1IF \ in pir1
+
+: i2c.init ( -- )
+  %00001000 ssp1con1 c! \ Master mode
+  [ Fcy #100 / 1- ] literal ssp1add c! \ Set clock frequency to 100 kHz
+  mSSP1IF pir1 mclr \ Clear interrupt bit
+  %00011000 trisc mset \ SCL1 on RC3, SDA1 on RC4
+  %00011000 anselc mclr
+  mSSP1EN ssp1con1 mset \ Enable hardware
+;
+
+: i2c.close ( -- )
+  mSSP1EN ssp1con1 mclr
+  mSSP1IF pir1 mclr
+;
+
+: i2c.wait ( -- ) \ Wait for interrupt flag and clear it
+  begin mSSP1IF pir1 mtst until
+  mSSP1IF pir1 mclr
+;
+
+: i2c.idle? ( -- f )
+  %00011111 ssp1con2 mtst \ ACKEN RCEN REN RSEN SEN
+  %100 ssp1stat mtst \ R/^W
+  or 0=
+;
+
+: i2c.start ( -- ) \ Send start condition
+  begin i2c.idle? until
+  mSSP1IF pir1 mclr
+  mSEN ssp1con2 mset
+  i2c.wait
+;
+
+: i2c.rsen ( -- ) \ Send repeated start condition
+  mSSP1IF pir1 mclr
+  mRSEN ssp1con2 mset
+  i2c.wait
+;
+
+: i2c.stop ( -- ) \ Send stop condition
+  mSSP1IF pir1 mclr
+  mPEN ssp1con2 mset
+  i2c.wait
+;
+
+: i2c.buf.full? ( -- f )
+  mBF ssp1stat mtst
+;
+
+\ Write one byte to bus, leaves ACK bit.
+\ A value of 0 indicates ACK was received from slave device.
+: i2c.c! ( c -- f )
+  begin i2c.buf.full? 0= until
+  ssp1buf c!
+  begin i2c.buf.full? 0= until
+  begin i2c.idle? until
+  ssp1con2 c@ mACKSTAT and
+;
+
+\ Send ack bit.
+: i2c.ack.seq ( -- )
+  mACKEN ssp1con2 mset
+  begin mACKEN ssp1con2 mtst 0= until
+;
+
+\ Read one byte and ack for another.
+: i2c.c@.ack ( -- c )
+  mRCEN ssp1con2 mset
+  begin i2c.buf.full? until
+  mACKDT ssp1con2 mclr i2c.ack.seq \ ack
+  ssp1buf c@
+;
+
+ \ Read one last byte.
+: i2c.c@.nack ( -- c )
+  mRCEN ssp1con2 mset
+  begin i2c.buf.full? until
+  mACKDT ssp1con2 mset i2c.ack.seq \ nack
+  ssp1buf c@
+;
+
+\ Address slave for writing, leaves true if slave ready.
+: i2c.addr.write ( 7-bit-addr -- f )
+  1 lshift 1 invert and \ Build full byte with write-bit as 0
+  i2c.start i2c.c! 0=
+;
+
+\ Address slave for reading, leaves true if slave ready.
+: i2c.addr.read ( 7-bit-addr -- f )
+  1 lshift 1 or \ Build full byte with read-bit as 1
+  i2c.start i2c.c! 0=
+;
+
+\ Detect presence of device, leaving true if device present, 0 otherwise.
+\ We actually fetch a byte if the slave has acknowledged, then discard it.
+: i2c.ping? ( 7-bit-addr -- f )
+  i2c.addr.read if i2c.c@.nack drop true else false then
+;</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_pic24fv32ka30x_3">11.2. PIC24FV32KA30X</h3>
+<div class="listingblock">
+<div class="content">
+<pre>\ i2c-base-pic24fv32ka30x.txt
+\ Low-level words for I2C master on PIC24FV32KA302 and KA301
+\
+\ Modelled on i2c-base.txt for PIC18, i2c-twi.frt from amforth
+\ the Microchip PIC24 Family Reference Manual
+\ and the datasheet for PIC24FV32KA304 family.
+\ Peter J.  2015-09-23
+
+-i2c-base
+marker -i2c-base
+hex ram
+
+\ Registers related to I2C operation of MSSP1
+$0086 constant ifs1
+$0200 constant i2c1rcv
+$0202 constant i2c1trn
+$0204 constant i2c1brg
+$0206 constant i2c1con
+$0208 constant i2c1stat
+$020a constant i2c1add
+$020c constant i2c1msk
+$02c8 constant trisb
+$02ca constant portb
+$02cc constant latb
+$02ce constant odcb
+$04e2 constant ansb
+$0770 constant pmd1
+
+\ Masks for bits
+$8000 constant mI2CEN \ in i2c1con
+%000001 constant mSEN
+%000010 constant mRSEN
+%000100 constant mPEN
+%001000 constant mRCEN
+%010000 constant mACKEN
+%100000 constant mACKDT
+$8000 constant mACKSTAT \ in i2c1stat
+$4000 constant mTRSTAT
+$0400 constant mBCL
+$0080 constant mIWCOL
+$0040 constant mI2COV
+%0001 constant mTBF
+%0010 constant mRBF
+%0010 constant mMI2C1IF \ in ifs1
+
+$0100 constant mRB8 \ SCL1 on RB8
+$0200 constant mRB9 \ SDA1 on RB9
+
+: i2c.init ( -- )
+  $80 pmd1 mclr \ Enable the I2C1 module
+  [ Fcy #100 / Fcy #10000 / - 1- ] literal i2c1brg c! \ Set clock to 100 kHz
+  mMI2C1IF ifs1 mclr \ Clear interrupt bit for master operation
+  %1100000000 trisb mset \ SCL1 on RB8, SDA1 on RB9
+  %1100000000 odcb mset
+  mI2CEN i2c1con mset \ Enable hardware
+;
+
+: i2c.close ( -- )
+  mI2CEN i2c1con mclr
+  mMI2C1IF ifs1 mclr
+;
+
+: i2c.bus.reset ( -- )
+  \ Manually reset the slave devices.
+  \ For use when a slave just won't let SDA1 go.
+  i2c.close
+  mRB9 trisb mset \ leave SDA1 float
+  mRB9 odcb mset
+  mRB8 trisb mclr \ drive SCL1 with digital output
+  mRB8 odcb mset
+  9 for
+    mRB8 latb mclr 1 ms
+    mRB8 latb mset 1 ms
+  next
+  \ stop condition
+  mRB8 latb mclr
+  mRB9 trisb mclr
+  mRB9 latb mclr 1 ms
+  mRB8 latb mset
+  mRB9 latb mset 1 ms
+  \ release bus
+  mRB8 trisb mset
+  mRB9 trisb mset
+;
+
+: i2c.wait ( -- ) \ Wait for interrupt flag and clear it
+  begin mMI2C1IF ifs1 mtst until
+  mMI2C1IF ifs1 mclr
+;
+
+: i2c.idle? ( -- f )
+  %00011111 i2c1con mtst \ ACKEN RCEN REN RSEN SEN
+  0=
+;
+
+: i2c.start ( -- ) \ Send start condition
+  begin i2c.idle? until
+  mMI2C1IF ifs1 mclr
+  mSEN i2c1con mset
+  i2c.wait
+;
+
+: i2c.rsen ( -- ) \ Send repeated start condition
+  mMI2C1IF ifs1 mclr
+  mRSEN i2c1con mset
+  i2c.wait
+;
+
+: i2c.stop ( -- ) \ Send stop condition
+  mMI2C1IF ifs1 mclr
+  mPEN i2c1con mset
+  i2c.wait
+;
+
+: i2c.tbuf.full? ( -- f )
+  mTBF i2c1stat mtst
+;
+
+: i2c.rbuf.full? ( -- f )
+  mRBF i2c1stat mtst
+;
+
+\ Write one byte to bus, leaves ACK bit.
+\ A value of 0 indicates ACK was received from slave device.
+: i2c.c! ( c -- f )
+  begin i2c.tbuf.full? 0= until
+  mMI2C1IF ifs1 mclr
+  i2c1trn c!
+  \ We wait for the interrupt because just waiting for the buffer
+  \ to be empty is unreliable if we look too soon.
+  i2c.wait
+  begin i2c.idle? until
+  i2c1stat @ mACKSTAT and
+;
+
+\ Send ack bit.
+: i2c.ack.seq ( -- )
+  mACKEN i2c1con mset
+  begin mACKEN i2c1con mtst 0= until
+;
+
+\ Read one byte and ack for another.
+: i2c.c@.ack ( -- c )
+  mRCEN i2c1con mset
+  begin i2c.rbuf.full? until
+  mACKDT i2c1con mclr i2c.ack.seq \ ack
+  i2c1rcv c@
+;
+
+ \ Read one last byte.
+: i2c.c@.nack ( -- c )
+  mRCEN i2c1con mset
+  begin i2c.rbuf.full? until
+  mACKDT i2c1con mset i2c.ack.seq \ nack
+  i2c1rcv c@
+;
+
+\ Address slave for writing, leaves true if slave ready.
+: i2c.addr.write ( 7-bit-addr -- f )
+  1 lshift 1 invert and \ Build full byte with write-bit as 0
+  i2c.start i2c.c! 0=
+;
+
+\ Address slave for reading, leaves true if slave ready.
+: i2c.addr.read ( 7-bit-addr -- f )
+  1 lshift 1 or \ Build full byte with read-bit as 1
+  i2c.start i2c.c! 0=
+;
+
+\ Detect presence of device,
+\ leaving true if device present, 0 otherwise.
+\ We actually fetch a byte if the slave has acknowledged.
+: i2c.ping? ( 7-bit-addr -- f )
+  i2c.addr.read if i2c.c@.nack drop true else false then
+;</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_atmega328p_3">11.3. ATmega328P</h3>
+<div class="listingblock">
+<div class="content">
+<pre>\ i2c-base-avr.txt
+\ Low-level words for TWI/I2C on Atmega328P.
+\
+\ Modelled on i2c-twi.frt from amforth,
+\ i2c_base.txt for FlashForth on PIC18
+\ and the Atmel datasheet, of course.
+\ Peter J.  2014-10-27
+
+-i2c-base
+marker -i2c-base
+hex ram
+
+\ Two-Wire-Interface Registers
+$b8 constant TWBR
+$b9 constant TWSR
+$bb constant TWDR
+$bc constant TWCR
+
+\ Bits in the Control Register
+%10000000 constant mTWINT
+%01000000 constant mTWEA
+%00100000 constant mTWSTA
+%00010000 constant mTWSTO
+%00001000 constant mTWWC
+%00000100 constant mTWEN
+%00000001 constant mTWIE
+
+: i2c.init ( -- ) \ Set clock frequency to 100kHz
+  %11 TWSR mclr \ prescale value = 1
+  [ Fcy #100 / #16 - 2/ ] literal TWBR c!
+  mTWEN TWCR mset
+;
+
+: i2c.wait ( -- ) \ Wait for operation to complete
+  \ When TWI operations are done, the hardware sets
+  \ the TWINT interrupt flag, which we will poll.
+  begin TWCR c@ mTWINT and until
+;
+
+: i2c.start ( -- ) \ Send start condition
+  [ mTWINT mTWEN or mTWSTA or ] literal TWCR c!
+  i2c.wait
+;
+
+: i2c.rsen ( -- ) \ Send repeated start condition
+  i2c.start \ AVR doesn't distinguish
+;
+
+: i2c.stop ( -- ) \ Send stop condition
+  [ mTWINT mTWEN or mTWSTO or ] literal TWCR c!
+;
+
+\ Write one byte to bus, returning 0 if ACK was received, -1 otherwise.
+: i2c.c! ( c -- f )
+  i2c.wait \ Must have TWINT high to write data
+  TWDR c!
+  [ mTWINT mTWEN or ] literal TWCR c!
+  i2c.wait
+  \ Test for arrival of an ACK depending on what was sent.
+  TWSR c@ $f8 and $18 xor 0= if 0 exit then \ SLA+W
+  TWSR c@ $f8 and $28 xor 0= if 0 exit then \ data byte
+  TWSR c@ $f8 and $40 xor 0= if 0 exit then \ SLA+R
+  -1 \ Something other than an ACK resulted
+;
+
+\ Read one byte and ack for another.
+: i2c.c@.ack ( -- c )
+  [ mTWINT mTWEN or mTWEA or ] literal TWCR c!
+  i2c.wait
+  TWDR c@
+;
+
+\ Read one last byte.
+: i2c.c@.nack ( -- c )
+  [ mTWINT mTWEN or ] literal TWCR c!
+  i2c.wait
+  TWDR c@
+;
+
+\ Address slave for writing, leaving true if slave ready.
+: i2c.addr.write ( 7-bit-addr -- f )
+  1 lshift 1 invert and \ Build full byte with write-bit as 0
+  i2c.start i2c.c! if false else true then
+;
+
+\ Address slave for reading, leaving true if slave ready.
+: i2c.addr.read ( 7-bit-addr -- f )
+  1 lshift 1 or \ Build full byte with read-bit as 1
+  i2c.start i2c.c! if false else true then
+;
+
+\ Detect presence of device, leaving true if slave responded.
+\ If the slave ACKs the read request, fetch one byte only.
+: i2c.ping? ( 7-bit-addr -- f )
+  1 lshift 1 or \ Build full byte with read-bit as 1
+  i2c.start i2c.c! 0= if i2c.c@.nack drop true else false then
+;</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_notes_on_using_the_words">11.4. Notes on using the words</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>The word <code>i2c.init</code> is used to set up the I<sup>2</sup>C master peripheral for further activities.</p>
+</li>
+<li>
+<p>I<sup>2</sup>C conversations begin by addressing a slave device for either reading or writing.
+The words <code>i2c.addr.read</code> and <code>i2c.addr.write</code> are provided for this waking of the slave.
+They leave a flag on the stack to indicate whether the slave device acknowledged being addressed.
+If the slave device responded appropriately, you may proceed to read or write bytes.</p>
+</li>
+<li>
+<p>There are two words for reading a byte from the bus.
+<code>i2c.c@.ack</code> reads a byte and asserts an acknowledge (ACK) to indicate to the slave device that
+another byte will be read subsequently.
+<code>i2c.c@.nack</code> reads a byte and asserts a NACK to indicate to the slave that no more bytes are wanted.</p>
+</li>
+<li>
+<p>The word to send a byte to the slave device is <code>i2c.c!</code>.
+This word leaves a flag to indicate the state of the ACK bit following the action of sending the byte.
+If the slave asserted ACK, the flag will be <code>0</code>.
+You may <code>drop</code> this flag if it not of interest to you.</p>
+</li>
+<li>
+<p>There are lower-level words <code>i2c.start</code>, <code>i2c.rsen</code> and <code>i2c.stop</code> to assert
+start, restart and stop conditions respectively.
+These are used within the higher-level words mentioned above.</p>
+</li>
+<li>
+<p>The utility word <code>i2c.ping?</code> attempts to address a slave and read a byte.
+It leaves <code>true</code> if the slave responds, else <code>false</code>.</p>
+</li>
+<li>
+<p>Sometimes when tinkering with a new I<sup>2</sup>C device,
+you can get into a state of confusion such that the slave device will end up in some intermediate state
+waiting for clock signals.
+(This happens more often than I would like to admit.)
+In this state, the slave device will no longer respond in a way that the master peripheral understands.
+Rather than cycle the power to reset the slave device, it may be convenient to force the clocking
+of the data bits through the bus and get the slave device back into an idle state.
+The word <code>i2c.reset.bus</code> (in <code>i2c-base-pic24fv32ka30x.txt</code>) is provided to automate this
+forced clocking.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_detecting_i2c_devices">11.5. Detecting I<sup>2</sup>C devices</h3>
+<div class="paragraph">
+<p>Building on the base words for a particular microcontroller, the following program works on
+all of the microcontrollers discussed in this tutorial guide.
+It is convenient to run this program to to see if the device of interest is responding.
+There&#8217;s no point trying to have a conversation with a device that doesn&#8217;t respond to being addressed.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>\ i2c-detect.txt
+\ Detect presence of all possible devices on I2C bus.
+\ Only the 7 bit address schema is supported.
+\
+\ Copied from amForth distribution (lib/hardware/)
+\ and lightly edited to suit FlashForth 5.0 on AVR.
+\ Builds upon i2c-base-xxxx.txt and doloop.txt.
+\ Peter J. 2014-10-27
+
+-i2c-detect
+marker -i2c-detect
+
+\ not all bitpatterns are valid 7bit i2c addresses
+: i2c.7bitaddr? ( a -- f)  $7 $78 within ;
+
+: i2c.detect   ( -- )
+    base @ hex
+    \ header line
+    cr 5 spaces $10 0 do i 2 u.r loop
+    $80 0 do
+      i $0f and 0= if
+        cr i 2 u.r [char] : emit space
+      then
+      i i2c.7bitaddr? if
+        i i2c.ping? if \ does device respond?
+            i 2 u.r
+          else
+            ." -- "
+        then
+      else
+         ."    "
+      then
+    loop
+    cr base !
+;
+
+\ With a lone Microchip TC74A0 sitting on the bus,
+\ the output looks like
+\ i2c.init  ok&lt;$,ram&gt;
+\ i2c.detect
+\      00 01 02 03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f
+\ 00 :                      -- -- -- -- -- -- -- -- --
+\ 10 : -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+\ 20 : -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+\ 30 : -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+\ 40 : -- -- -- -- -- -- -- -- 48 -- -- -- -- -- -- --
+\ 50 : -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+\ 60 : -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+\ 70 : -- -- -- -- -- -- -- --
+\  ok&lt;$,ram&gt;
+\ i2c.stop  ok&lt;$,ram&gt;</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_using_i2c_to_get_temperature_measurements">12. Using I<sup>2</sup>C to get temperature measurements</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Using the words in <code>i2c-base-k22.txt</code> to control the MSSP peripheral in master mode,
+one may talk to the TC74A5 temperature measurement chip on the PICDEM 2 PLUS
+and report sensor temperature.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>\ Read temperature from TC74 on PICDEM2+ board with PIC18F46K22-I/P.
+\ Modelled on Mikael Nordman's i2c_tcn75.txt.
+\ This program requires i2c-base-k22.txt to be previously loaded.
+-read-tc74
+marker -read-tc74
+
+%1001101 constant addr-TC74A5  \ 7-bit address for the chip
+
+: tc74-init ( -- )
+  \ Selects the temperature register for subsequent reads.
+  addr-TC74A5 i2c.addr.write if 0 i2c.c! drop then i2c.stop
+;
+: sign-extend ( c -- n )
+  \ If the TC74 has returned a negative 8-bit value,
+  \ we need to sign extend to 16-bits with ones.
+  dup $7f &gt; if $ff80 or then
+;
+: degrees@ ( -- n )
+  \ Wake the TC74 and receive its register value.
+  addr-TC74A5 i2c.addr.read if i2c.c@.nack sign-extend else 0 then
+;
+: tc74-main ( -- )
+  i2c.init
+  tc74-init
+  begin
+    degrees@ .
+    #1000 ms
+  key? until
+;
+
+\ Now, report temperature in degrees C
+\ while we warm up the TC74 chip with our fingers...
+decimal tc74-main</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>With a Saleae Logic Analyser connected to the pins of the TC74A5, we can see the I<sup>2</sup>C
+signals as a result of calling the <code>tc74-init</code> word.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../figs/saleae-logic-read-tc74-init-binary-region.png" alt="saleae logic read tc74 init binary region" width="100%">
+</div>
+</div>
+<div class="paragraph">
+<p>A little later on, the <code>degrees@</code> word is invoked.
+The returned binary value of <code>0b00010101</code> corresponds
+to the very pleasant 21<sup>o</sup>C that existed in the back shed as this text was being written.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../figs/saleae-logic-read-tc74-read-binary-region.png" alt="saleae logic read tc74 read binary region" width="100%">
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_making_high_resolution_voltage_measurements">13. Making high-resolution voltage measurements</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The Microchip MCP3422 is a \x03A3;\x0394;-ADC that can connected via I<sup>2</sup>C port.
+This neat little converter can measure voltages with a resolution of 18 bits
+(at the lowest data rate of 3.75 samples per second) and includes
+a programmable gain amplifier.
+Being available in a surface-mount package only, it was convenient to use a prebuilt
+evaluation board, the green board between the home-built FlashForth demo board
+and the fixed-voltage supply board.
+The MCP3422 evaluation board is connected to and powered from the I<sup>2</sup>C header on the
+FlashForth demo board.
+Separately, the fixed-voltage supply board provides the measurement voltage
+to channel 1 of the MCP3422 via a potentiometer that is set to give 1.024 V,
+according to my (fairly cheap) multimeter.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../figs/mcp3422-i2c-demo-with-pic18f26k22.jpeg" alt="mcp3422 i2c demo with pic18f26k22" width="100%">
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>\ mcp3422-2016.txt
+\ Play with mcp3422 eval board.
+\ PJ, 21-Oct-2013
+\     28-Apr-2014 PIC18F26K22 version
+\     27-Jan-2016 update to use latest i2c words
+\ Needs i2c-base-k22.txt and math.txt (to get m*/).
+
+-mcp3422
+marker -mcp3422
+
+$68 constant addr-mcp3422 \ 7-bit address
+
+: mcp3422-init ( -- )
+  \ $9c is config for 18-bit continuous conversions of ch 1
+  addr-mcp3422 i2c.addr.write if $9c i2c.c! drop then i2c.stop
+;
+
+: mcp3422@ ( -- d f ) \ Read the 18-bit result as 3 bytes
+  addr-mcp3422 i2c.addr.read
+  if
+    i2c.c@.ack                         \ only 2 bits in first byte
+    dup $3 &gt; if $fffa or then          \ sign-extend to full cell
+    i2c.c@.ack $8 lshift i2c.c@.ack or \ next two bytes into one cell
+    swap                               \ leave double result
+    i2c.c@.nack $80 and 0=             \ leave true if result is latest
+  else
+    0 0 0  \ device did not ack on address
+  then
+;
+
+: microvolts ( d1 -- d2 )
+  \ The least-significant bit corresponds to 15.625 microvolts
+  #125 #8 m*/
+;
+
+: (d.3) ( d -- )
+  swap over dabs
+  &lt;# # # # [char] . hold #s rot sign #&gt;
+;
+
+: report ( d f -- ) \ Assuming decimal, print millivolt value
+  cr if ." new " else ." old " then
+  microvolts (d.3) type space ." mV "
+;
+
+: mcp3422-run ( -- )
+  decimal
+  i2c.init mcp3422-init
+  begin
+    mcp3422@ report
+    #1000 ms
+  key? until
+  hex
+;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Notes on this program:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>mcp3422-run</code> is the top-level word that initializes the hardware, then periodically
+reads the MCP3422 data and reports the voltage (in millivolts) to the user terminal.
+The program runs until a key is pressed.</p>
+</li>
+<li>
+<p>The converted value is read from the MCP3422 as an 18-bit value in 2-complement format.
+The word <code>mcp3422@</code> reads the data as three bytes from the I<sup>2</sup>C port and then
+shuffles it into a double-cell value that is left on the stack, along with a flag to indicate
+whether the value sent by the MCP3422 happened to be the latest data.
+If the MCP3422 did not respond to being addressed, zeros will be left on the stack in place
+of the expected data.</p>
+</li>
+<li>
+<p>The value is scaled to microvolts and then the resultant double value is output using the
+pictured numeric output to have 3 decimal places so that it looks like a millivolt reading.
+Several lines from the terminal look like the following:</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>new 1028.031 mV
+new 1028.062 mV
+new 1028.046 mV</pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>This program builds upon the <code>i2c-base-k22</code> words
+in order to communicate with the MCP3422.
+The code for scaling of the measured data requires
+the mixed-scale word <code>m*/</code> from the file <code>math.fs</code> provided by FlashForth.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_an_i2c_slave_example">14. An I<sup>2</sup>C slave example</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The MSSP in the PIC18F26K22 can also be used in slave mode.
+Here, the FlashForth demo board is presented as an I<sup>2</sup>C slave device to
+an Aardvark serial interface, acting as master.
+The UART communication is provided by a Future Technology Devices International
+USB TTL-serial cable.</p>
+</div>
+<div class="paragraph">
+<p>The core of the program is the <code>i2c_service</code> word which is invoked
+each time a serial-port event is flagged by the SSPIF bit in the PIR1 flag register.
+This word is an implementation of the state look-up approach detailed in
+the Microchip Application Note AN734
+<em>Using the PIC Devices’ SSP and MSSP Modules for Slave I2C Communication</em>.
+The rest of the program is there to provide (somewhat) interesting data
+for the I<sup>2</sup>C master to read and to do something (light a LED)
+when the master writes suitable data to the slave.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>-i2c-slave
+marker -i2c-slave
+\ Make the FlashForth 26K22 demo board into an I2C slave.
+\ An I2C master can read and write to a buffer here,
+\ the least-significant bit of the first byte controls
+\ the LED attached to pin RB0.
+\
+\ Needs core.txt loaded.
+
+$ff81 constant portb
+$ff82 constant portc
+$ff8a constant latb
+$ff93 constant trisb
+$ff94 constant trisc
+$ff3a constant anselc
+
+: led_on ( -- )
+  %00000001 latb mset
+;
+: led_off ( -- )
+  %00000001 latb mclr
+;
+: err_led_on ( -- )
+  %00000010 latb mset
+;
+: err_led_off ( -- )
+  %00000010 latb mclr
+;
+
+\ Establish a couple of buffers in RAM, together with index variables.
+ram
+8 constant buflen
+\ Receive buffer for incoming I2C data.
+create rbuf buflen allot
+variable rindx
+: init_rbuf ( -- )
+  rbuf buflen erase
+  0 rindx !
+;
+: incr_rindx ( -- ) \ increment with wrap-around
+  rindx @ 1 +
+  dup buflen = if drop 0 then
+  rindx !
+;
+: save_to_rbuf ( c -- )
+  rbuf rindx @ + c!
+  incr_rindx
+;
+
+\ Send buffer with something interesting for the I2C master to read.
+create sbuf buflen allot
+variable sindx
+: incr_sindx ( -- ) \ increment with wrap-around
+  sindx @ 1 +
+  dup buflen = if drop 0 then
+  sindx !
+;
+: init_sbuf ( -- ) \ fill with counting integers, for interest
+  buflen
+  for
+    r@ 1+
+    sbuf r@ + c!
+  next
+  0 sindx !
+;
+
+\ I2C-related definitions and code
+$ffc5 constant sspcon2
+$ffc6 constant sspcon1
+$ffc7 constant sspstat
+$ffc8 constant sspadd
+$ffc9 constant sspbuf
+$ff9e constant pir1
+
+\ PIR1 bits
+%00001000 constant sspif
+
+\ SSPSTAT bits
+%00000001 constant bf
+%00000100 constant r_nw
+%00001000 constant start_bit
+%00010000 constant stop_bit
+%00100000 constant d_na
+%01000000 constant cke
+%10000000 constant smp
+
+d_na start_bit or r_nw or bf or constant stat_mask
+
+\ SSPCON1 bits
+%00010000 constant ckp
+%00100000 constant sspen
+%01000000 constant sspov
+%10000000 constant wcol
+
+\ SSPCON2 bits
+%00000001 constant sen
+
+: i2c_init ( -- )
+  %11000 anselc mclr \ enable digital-in on RC3,RC4 (SCL1,SDA1)
+  %00011000 trisc mset \ RC3==SCL RC4==SDA
+  %00000110 sspcon1 c! \ Slave mode with 7-bit address
+  sen sspcon2 mset \ Clock stretching enabled
+  smp sspstat mset \ Slew-rate disabled
+  $52 1 lshift sspadd c! \ Slave address
+  sspen sspcon1 mset \ Enable MSSP peripheral
+;
+
+: release_clock ( -- )
+  ckp sspcon1 mset
+;
+
+: i2c_service ( -- )
+  \ Check the state of the I2C peripheral and react.
+  \ See App Note 734 for an explanation of the 5 states.
+  \
+  \ State 1: i2c write operation, last byte was address.
+  \ D_nA=0, S=1, R_nW=0, BF=1
+  sspstat c@ stat_mask and %00001001 =
+  if
+    sspbuf @ drop
+    init_rbuf
+    release_clock
+    exit
+  then
+  \ State 2: i2c write operation, last byte was data.
+  \ D_nA=1, S=1, R_nW=0, BF=1
+  sspstat c@ stat_mask and %00101001 =
+  if
+    sspbuf c@ save_to_rbuf
+    release_clock
+    exit
+  then
+  \ State 3: i2c read operation, last byte was address.
+  \ D_nA=0, S=1, R_nW=1
+  sspstat c@ %00101100 and %00001100 =
+  if
+    sspbuf c@ drop
+    0 sindx !
+    wcol sspcon1 mclr
+    sbuf sindx @ + c@ sspbuf c!
+    release_clock
+    incr_sindx
+    exit
+  then
+  \ State 4: i2c read operation, last byte was outgoing data.
+  \ D_nA=1, S=1, R_nW=1, BF=0
+  sspstat c@ stat_mask and %00101100 =
+  ckp sspcon1 mtst 0=
+  and
+  if
+    wcol sspcon1 mclr
+    sbuf sindx @ + c@ sspbuf c!
+    release_clock
+    incr_sindx
+    exit
+  then
+  \ State 5: master NACK, slave i2c logic reset.
+  \ From AN734: D_nA=1, S=1, BF=0, CKP=1, however,
+  \ we use just D_nA=1 and CKP=1, ignoring START bit.
+  \ This is because master may have already asserted STOP
+  \ before we service the final NACK on a read operation.
+  d_na sspstat mtst 0 &gt; ckp sspcon1 mtst 0 &gt; and
+  stop_bit sspstat mtst or
+  if
+    exit \ Nothing needs to be done.
+  then
+  \ We shouldn't arrive here...
+  err_led_on
+  cr ." Error "
+  ." sspstat " sspstat c@ u.
+  ." sspcon1 " sspcon1 c@ u.
+  ." sspcon2 " sspcon2 c@ u.
+  cr
+  begin again \ Hang around until watch-dog resets MCU.
+;
+
+
+: init ( -- )
+  %00000011 trisb mclr  \ want RB0,RB1 as output pins
+  init_rbuf
+  init_sbuf
+  i2c_init
+  led_on err_led_on #200 ms led_off err_led_off
+;
+
+: main ( -- )
+  cr ." Start I2C slave "
+  init
+  begin
+    sspif pir1 mtst
+    if
+      sspif pir1 mclr
+      i2c_service
+    then
+    rbuf c@ %00000001 and
+    if led_on else led_off then
+    cwd
+  key? until
+;
+
+\ ' main is turnkey</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>With a Saleae Logic Analyser connected, we can see the I<sup>2</sup>C
+signals as a result of writing the byte <code>0x01</code> to turn on the LED.
+The following figure shows the data and clock signals from the time that the
+master asserts the START condition (green circle)
+until it asserts the STOP condition (as indicated by the red square).</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../figs/i2c-aardvark-write-byte.png" alt="i2c aardvark write byte" width="100%">
+</div>
+</div>
+<div class="paragraph">
+<p>The clock frequency is 100 kHz and there is a 138 microsecond gap
+between the ninth clock pulse of the address byte and
+the start of the pulses for the data byte.
+This gives an indication of the time needed to service each SSPIF event.</p>
+</div>
+<div class="paragraph">
+<p>A little later on, the Aardvark reads two bytes from the bus, as shown here.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../figs/i2c-aardvark-read-2-bytes.png" alt="i2c aardvark read 2 bytes" width="100%">
+</div>
+</div>
+<div class="paragraph">
+<p>Zooming in, to show the finer annotation, the same signals are shown below.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../figs/i2c-aardvark-read-2-bytes-zoom-to-start.png" alt="i2c aardvark read 2 bytes zoom to start" width="100%">
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../figs/i2c-aardvark-read-2-bytes-zoom-to-nack.png" alt="i2c aardvark read 2 bytes zoom to nack" width="100%">
+</div>
+</div>
+<div class="paragraph">
+<p>Again, the inter-byte gap is 138 microseconds resulting in about 200 microseconds
+needed to transfer each byte.
+This effective speed of 5 kbytes/s should be usable for many applications,
+since the I<sup>2</sup>C bus is typically used for low speed data transfer.</p>
+</div>
+<div class="paragraph">
+<p>Notes on this program:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Need to load <code>core.fs</code> before the source code of the <code>i2c-slave.txt</code>.</p>
+</li>
+<li>
+<p>Slave examples found in documentation on the Web usually have the service function
+written in the context of an interrupt service routine.
+The MSSP can be serviced quite nicely without resorting to the use of interrupts,
+however, you still have to check and clear the SSPIF bit for each event.</p>
+</li>
+<li>
+<p>The implementation of the test for State 5 (Master NACK) is slightly
+different to that described in AN734 because it was found that the master
+would assert an I<sup>2</sup>C bus stop after the final NACK of a read operation
+but before the MCU could service the SSPIF event.
+This would mean that STOP was the most recent bus condition seen
+by the MSSP and the START and STOP bits set to reflect this.
+In the figures shown above, there is only about 12 microseconds between the ninth
+clock pulse for the second read data byte and the Aardvark master asserting
+the STOP condition on the bus.
+This period is very much shorter than the (approx.) 140 microseconds period
+needed by the slave firmware to service the associated SSPIF event.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_speed_of_operationbit_banging">15. Speed of operation&#8201;&#8212;&#8201;bit banging</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>All of this nice interaction and convenience has some costs.
+One cost is the number of MCU instruction cycles needed to process
+the Forth words.
+To visualize this cost, the following program defines a word <code>blink-forth</code> which
+toggles an IO pin using the high-level FlashForth words that fetch and store bit patterns into the
+port latch register.
+An alternative word <code>blink-asm</code> uses assembler instructions to achieve an equivalent effect, but faster,
+and a third word <code>blink-bits</code> uses the FlashForth <code>bit0:</code> and <code>bit1:</code> words
+to create high-level bit-manipulation words that also achieve full machine speed.</p>
+</div>
+<div class="sect2">
+<h3 id="_pic18f26k22">15.1. PIC18F26K22</h3>
+<div class="listingblock">
+<div class="content">
+<pre>-speed-test
+marker -speed-test
+\ Waggle RB1 as quickly as we can, in both high- and low-level code.
+\ Before sending this file, we should send asm.txt so that we have
+\ the clrwdt, word available.  We also need bit.txt.
+
+$ff8a constant latb
+$ff93 constant trisb
+
+: initRB1
+  %10 trisb mclr \ RB1 as output
+  %10 latb mclr \ initially known state
+;
+
+\ high-level bit fiddling, presumably slow
+: blink-forth ( -- )
+  initRB1
+  begin
+    %10 latb c! 0 latb c! \ one cycle, on and off
+    %10 latb c! 0 latb c!
+    %10 latb c! 0 latb c!
+    %10 latb c! 0 latb c!
+    cwd \ We have to kick the watch dog ourselves.
+  again
+;
+
+\ low-level bit fiddling, via assembler
+: blink-asm ( -- )
+  initRB1
+  [
+  begin,
+    latb 1 a, bsf,  latb 1 a, bcf, \ one cycle, on and off
+    latb 1 a, bsf,  latb 1 a, bcf,
+    latb 1 a, bsf,  latb 1 a, bcf,
+    latb 1 a, bsf,  latb 1 a, bcf,
+    clrwdt, \ kick the watch dog
+  again,
+  ]
+;
+
+\ high-level bit fiddling with named bits
+latb #1 bit1: RB1-hi inlined
+latb #1 bit0: RB1-lo inlined
+: blink-bits ( -- )
+  initRB1
+  begin
+    RB1-hi RB1-lo \ one cycle
+    RB1-hi RB1-lo
+    RB1-hi RB1-lo
+    RB1-hi RB1-lo
+    cwd
+  again
+;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Notes on this program:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>We have had to worry about clearing the watch-dog timer.
+In the early examples, the FlashForth interpreter was
+passing through the pause state often enough to keep the watch-dog happy.
+The words in this example give the FlashForth interpreter no time to pause
+so we are responsible for clearing the watch-dog timer explicitly.</p>
+</li>
+<li>
+<p>In the source code config file for the specific MCU, the watch-dog timer postscale
+is set to 256.
+With a 31.25 kHz oscillator frequency, this leads to a default timeout period
+of a little over 1 second (32 microseconds X 128 X 256).</p>
+</li>
+<li>
+<p>For the PIC18 MCU, the internal oscillator of 16 MHz was multiplied by the PLL
+to get 64 MHz oscillator driving the MCU.
+With 4 clock cycles per instruction cycle, this gave an instruction period T<sub>CY</sub> = 62.5 nanoseconds.
+Current consumption by the microcontroller was about 14 mA, roughly double the value
+when the interpreter is not doing much, just waiting for input.</p>
+</li>
+<li>
+<p>The first screen image below shows the output signal for running the high-level
+<code>blink-forth</code> word while the second image uses the assembler words.</p>
+</li>
+</ul>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../figs/speed-test-forth-pic18f26k22.jpeg" alt="speed test forth pic18f26k22" width="50%">
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../figs/speed-test-asm-pic18f26k22.jpeg" alt="speed test asm pic18f26k22" width="50%">
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>For the <code>blink-forth</code> word, one on+off cycle of the LED executes in 6 words
+and is seen (in the oscilloscope record) to require about 50 instruction cycles.
+So, on average, each of these threaded Forth words is executed in about 8 MCU instruction cycles.
+Note that this overhead includes the cost of using 16-bit cells for the data.
+Extra machine instructions are used to handle the upper bytes.
+In other applications, where we actually want to handle 16-bit data,
+this will no longer be a penalty.</p>
+</li>
+<li>
+<p>The assembler version has no overhead and the cycle time for the MCU
+instructions defines the period of the output signal.
+One on-off cycle requires 2 instructions so we see a short 125 nanosecond period.
+This is fast enough that the capacitive loading on the output pin
+is noticeable in the oscilloscope trace.
+Also, the time required for the machine instructions to clear the watch-dog timer
+and the instruction jump back to the start of the loop
+now shows up clearly in the oscilloscope record.</p>
+</li>
+<li>
+<p>The oscilloscope record for the <code>blink-bits</code> word is shown here.
+With the bit-manipulation words <code>RB1-hi</code> and <code>RB1-lo</code> being
+inlined, they also achieve full machine speed because the generated code is essentially
+the same as for <code>blink-asm</code>.</p>
+</li>
+</ul>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../figs/speed-test-named-bits-inlined-pic18f26k22.jpeg" alt="speed test named bits inlined pic18f26k22" width="50%">
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_pic24fv32ka302">15.2. PIC24FV32KA302</h3>
+<div class="listingblock">
+<div class="content">
+<pre>-speed-test
+marker -speed-test
+\ For the PIC24FV32KA302, waggle RB15 as quickly as we can,
+\ in both high- and low-level code.
+\ Remember to load bit.txt before this file.
+
+$02c8 constant trisb
+$02ca constant portb
+$02cc constant latb
+$02ce constant odcb
+
+1 #15 lshift constant bit15
+
+: initRB15
+  bit15 trisb mclr \ RB15 as output
+  bit15 latb mclr \ initially known state
+;
+
+\ high-level bit fiddling, presumably slow
+: blink-forth ( -- )
+  initRB15
+  begin
+    bit15 latb ! 0 latb ! \ one cycle, on and off
+    bit15 latb ! 0 latb !
+    bit15 latb ! 0 latb !
+    bit15 latb ! 0 latb !
+    cwd \ We have to kick the watch dog ourselves.
+  again
+;
+
+\ low-level bit fiddling, via assembler
+: blink-asm ( -- )
+  initRB15
+  [
+  begin,
+    #15 latb bset,  #15 latb bclr, \ one cycle, on and off
+    #15 latb bset,  #15 latb bclr,
+    #15 latb bset,  #15 latb bclr,
+    #15 latb bset,  #15 latb bclr,
+    ] cwd [ \ kick the watch dog
+  again,
+  ]
+;
+
+\ high-level bit fiddling with named bits
+latb #15 bit1: RB15-hi inlined
+latb #15 bit0: RB15-lo inlined
+: blink-bits ( -- )
+  initRB15
+  begin
+    RB15-hi RB15-lo \ one cycle
+    RB15-hi RB15-lo
+    RB15-hi RB15-lo
+    RB15-hi RB15-lo
+    cwd
+  again
+;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Notes on this program:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The order of the assembler arguments is bit-number register-address op-code.
+This is different to that seen in the PIC18 version of the program.</p>
+</li>
+<li>
+<p>The MCU was configured for running off its internal 8 MHz oscillator with
+the 4X PLL active and a 1:1 postscaling.
+This resulted in an instruction cycle period T<sub>CY</sub> = 62.5 nanoseconds.</p>
+</li>
+<li>
+<p>The first screen image below shows the output signal for running the high-level
+<code>blink-forth</code> word while the second image uses the assembler words.</p>
+</li>
+</ul>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../figs/speed-test-forth-pic24fv32ka302.jpeg" alt="speed test forth pic24fv32ka302" width="50%">
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../figs/speed-test-asm-pic24fv32ka302.jpeg" alt="speed test asm pic24fv32ka302" width="50%">
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>For the <code>blink-forth</code> word, one on+off cycle of the LED executes in 6 words
+and is seen (in the oscilloscope record) to require about 42 instruction cycles.
+So, on average, each of these threaded Forth words is executed by the 16-bit PIC24
+in 7 MCU instruction cycles.
+This illustrates a benefit of the 16-bit processor,
+since the 8-bit PIC18F26K22 required 50 MCU instruction cycles
+(and a correspondingly longer time of 3.08 microseconds) for the same effect.</p>
+</li>
+<li>
+<p>The assembler version has no overhead and the cycle time for the MCU
+instructions defines the period of the output signal.
+One on-off cycle requires 2 instructions so we see a short 124 nanosecond period.</p>
+</li>
+<li>
+<p>The oscilloscope record for the <code>blink-bits</code> word is shown here.
+Again, the bit-manipulation words <code>RB15-hi</code> and <code>RB15-lo</code> also achieve full machine speed.</p>
+</li>
+</ul>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../figs/speed-test-named-bits-inlined-pic24fv32ka302.jpeg" alt="speed test named bits inlined pic24fv32ka302" width="50%">
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_atmega328p_4">15.3. ATmega328P</h3>
+<div class="listingblock">
+<div class="content">
+<pre>-speed-test
+marker -speed-test
+\ Waggle PB5 as quickly as we can, in both high- and low-level code.
+\ Before sending this file, we should send asm.txt and bit.txt.
+
+$0024 constant ddrb
+$0025 constant portb    \ RAM address
+$0005 constant portb-io \ IO-space address
+1 #5 lshift constant bit5
+
+: initPB5
+  bit5 ddrb mset \ set pin as output
+  bit5 portb mclr \ initially known state
+;
+
+: cwd ( -- ) [ wdr, ] ; inlined \ we might want to reset the watchdog
+
+\ high-level bit fiddling, presumably slow
+: blink-forth ( -- )
+  initPB5
+  begin
+    bit5 portb c! 0 portb c! \ one cycle, on and off
+    bit5 portb c! 0 portb c!
+    bit5 portb c! 0 portb c!
+    bit5 portb c! 0 portb c!
+    cwd
+  again
+;
+
+\ low-level bit fiddling, via assembler
+: blink-asm ( -- )
+  initPB5
+  [
+  begin,
+    portb-io #5 sbi,  portb-io #5 cbi, \ one cycle, on and off
+    portb-io #5 sbi,  portb-io #5 cbi,
+    portb-io #5 sbi,  portb-io #5 cbi,
+    portb-io #5 sbi,  portb-io #5 cbi,
+    wdr,
+  again,
+  ]
+;
+
+\ high-level bit fiddling with named bits
+portb #5 bit1: PB5-hi inlined
+portb #5 bit0: PB5-lo inlined
+: blink-bits ( -- )
+  initPB5
+  begin
+    PB5-hi PB5-lo \ one cycle
+    PB5-hi PB5-lo
+    PB5-hi PB5-lo
+    PB5-hi PB5-lo
+    cwd
+  again
+;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Notes on this program:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Except for names, this code is essentially the same as for the PIC18 and PIC24
+versions of the exercise.  FlashForth abstracts away much of the instruction-set architecture
+of the microcontroller, leaving us to focus on twiddling the bits of the peripheral hardware.</p>
+</li>
+<li>
+<p>The MCU was configured for running with the 16 MHz crystal,
+which resulted in a machine clock cycle period T<sub>CY</sub> = 62.5 nanoseconds.</p>
+</li>
+<li>
+<p>The first screen image below shows the output signal for running the high-level
+<code>blink-forth</code> word while the second image uses the assembler words.</p>
+</li>
+</ul>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../figs/speed-test-forth-atmega328-2016.jpeg" alt="speed test forth atmega328 2016" width="50%">
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../figs/speed-test-asm-atmega328-2016.jpeg" alt="speed test asm atmega328 2016" width="50%">
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>For the <code>blink-forth</code>, one on+off cycle of the LED executes in 6 words
+and is seen (in the oscilloscope record) to require about 90 instruction cycles.
+So, on average, each of these threaded Forth words is executed by the 8-bit AVR
+in 15 MCU instruction cycles.</p>
+</li>
+<li>
+<p>The assembler version has no overhead and the cycle time for the MCU
+instructions defines the period of the output signal.
+One on-off cycle requires 2 instructions (<code>sbi</code> and \verb!cbi!) each requiring 2 clock cycles,
+so we see a short, quarter-microsecond period.</p>
+</li>
+<li>
+<p>The oscilloscope record for the \verb!blink-bits! word is shown here.
+It can be seen that the bit-manipulation words <code>PB5-hi</code> and <code>PB5-lo</code> achieve full machine speed.</p>
+</li>
+</ul>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../figs/speed-test-named-bits-inlined-atmega328-2016.jpeg" alt="speed test named bits inlined atmega328 2016" width="50%">
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_driving_an_hitachi_44780_lcd_controller">16. Driving an Hitachi-44780 LCD controller</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The LCD in the photograph in the Development Boards section was driven with the following code.
+During the development of this example, a lesson was relearned&#8201;&#8212;&#8201;that of reading
+the data sheet &#x1F609;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>\ Exercise LCD on PICDEM2+ board.
+\ Remember to load bit.txt before this file.
+-xlcd
+marker -xlcd
+
+$ff80 constant porta
+$ff89 constant lata
+$ff92 constant trisa
+$ff83 constant portd
+$ff8c constant latd
+$ff95 constant trisd
+
+\ The LCD is operated in nibble mode.
+\ RA1 = Enable (E) pin
+\ RA2 = Read/Write (RW) pin
+\ RA3 = Register Select (RS) pin
+\ RD0 = DB4 on LCD
+\ RD1 = DB5
+\ RD2 = DB6
+\ RD3 = DB7
+
+portd constant dataport
+lata #1 bit0: Elo
+lata #1 bit1: Ehi
+lata #2 bit0: RWlo
+lata #2 bit1: RWhi
+lata #3 bit0: RSlo
+lata #3 bit1: RShi
+
+: data-port-in ( -- )
+  trisd c@ $0f or trisd c!
+;
+
+: data-port-out ( -- )
+  trisd c@ $f0 and trisd c!
+;
+
+: put-nibble ( c -- )
+  \ Make lower 4 bits of c appear on data port pins.
+  $0f and
+  dataport c@ $f0 and
+  or
+  dataport c!
+;
+
+: short-delay ( -- )
+  18 for r@ drop next ;
+
+: Estrobe ( -- )
+  Ehi short-delay Elo
+;
+
+: lcd-getc ( -- c )
+  \ Read the LCD register in two nibbles.
+  \ Remember to select the register line before calling this word.
+  data-port-in
+  RWhi short-delay
+  Ehi short-delay dataport c@ #4 lshift Elo short-delay \ high nibble
+  Ehi short-delay dataport c@ Elo short-delay \ low nibble
+  or \ assemble full byte and leave it on the stack
+  RWlo short-delay
+;
+
+: lcd-ready? ( -- f )
+  \ Read the command register and check busy bit.
+  RSlo short-delay
+  lcd-getc $80 and 0=
+;
+
+: wait-for-lcd ( -- )
+  begin lcd-ready? cwd until
+;
+
+: lcd-putc ( c -- )
+  \ Write the LCD register in two nibbles.
+  \ Remember to select the register line before calling this word.
+  dup $f0 and #4 rshift \ high nibble left on top of stack
+  data-port-out
+  RWlo short-delay
+  put-nibble short-delay Estrobe short-delay
+  $0f and \ low nibble now left on top of stack
+  put-nibble short-delay Estrobe short-delay
+  data-port-in
+;
+
+: lcd-clear ( -- )
+  wait-for-lcd
+  RSlo short-delay
+  %00000001 lcd-putc
+;
+
+: lcd-home ( -- )
+  wait-for-lcd
+  RSlo short-delay
+  %00000010 lcd-putc
+;
+
+: lcd-goto ( c -- )
+  \ Set the specified 7-bit data memory address.
+  wait-for-lcd
+  RSlo short-delay
+  $80 or \ sets the highest bit for the command
+  lcd-putc
+;
+
+: lcd-init ( -- )
+  data-port-in
+  Elo RWlo RSlo
+  %00001110 trisa mclr \ RS, RW and E as output
+  30 ms \ power-on delay
+  \ Begin "initialization by instruction"
+  \ Presumably, the LCD is in 8-bit interface mode.
+  %0011 put-nibble Estrobe 5 ms
+  %0011 put-nibble Estrobe 1 ms
+  %0011 put-nibble Estrobe 1 ms
+  \ Function set for 4-bit interface; it is still in 8-bit mode.
+  %0010 put-nibble Estrobe 1 ms
+  \ Now, we should be in 4-bit interface mode.
+  \ Function set for 4-bit interface, 2 display lines 5x7 font.
+  wait-for-lcd
+  %00101000 lcd-putc
+  \ Increment cursor after each byte, don't shift display.
+  wait-for-lcd
+  %00000110 lcd-putc
+  \ Display off
+  wait-for-lcd
+  %00001000 lcd-putc
+  \ Display clear
+  %00000001 lcd-putc
+  5 ms
+  \ End of "initialization by instruction"
+  \ Enable cursor and display, no blink.
+  wait-for-lcd
+  %00001110 lcd-putc 1 ms
+  wait-for-lcd
+;
+
+: lcd-emit ( c -- ) \ Write the byte into data memory.
+  wait-for-lcd
+  RShi short-delay
+  lcd-putc
+;
+
+: lcd-type ( c-addr n -- ) \ send string
+  for c@+ lcd-emit next
+  drop
+;
+
+: main
+  ." Begin..."
+  lcd-init
+  cr ." lcd-init done."
+  s" Hello from" lcd-type
+  $40 lcd-goto
+  s" FlashForth 5.0" lcd-type
+  cr ." exercise done."
+;</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_references">References</h2>
+<div class="sectionbody">
+<div class="ulist bibliography">
+<ul class="bibliography">
+<li>
+<p><a id="brodie_1987"></a>[1] Brodie, L. and Forth Inc. (1987) Starting Forth: An introduction to the Forth Language and operating system for beginners and professionals, 2nd Ed. <em>Prentice Hall</em>  ISBN 0-13-843079-9. Also, updated and online <a href="http://home.iae.nl/users/mhx/sf.html" class="bare">http://home.iae.nl/users/mhx/sf.html</a> and the official online version <a href="http://www.forth.com/starting-forth/" class="bare">http://www.forth.com/starting-forth/</a></p>
+</li>
+<li>
+<p><a id="conklin_2007"></a>[2] Conklin, E. K. and Rather, E. D. (2007) Forth Programmer&#8217;s Handbook, 3rd Ed. <em>Forth Inc.</em> ISBN 1-4196-7549-4</p>
+</li>
+<li>
+<p><a id="pelc_2011"></a>[3] Pelc, S. (2011). Programming Forth. <em>Microprocessor Engineering Limited</em>, ISBN 978-0-9525310-5-0.  <a href="http://www.mpeforth.com/" class="bare">http://www.mpeforth.com/</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2022-01-01 14:04:37 +1000
+</div>
+</div>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  messageStyle: "none",
+  tex2jax: {
+    inlineMath: [["\\(", "\\)"]],
+    displayMath: [["\\[", "\\]"]],
+    ignoreClass: "nostem|nolatexmath"
+  },
+  asciimath2jax: {
+    delimiters: [["\\$", "\\$"]],
+    ignoreClass: "nostem|noasciimath"
+  },
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+})
+MathJax.Hub.Register.StartupHook("AsciiMath Jax Ready", function () {
+  MathJax.InputJax.AsciiMath.postfilterHooks.Add(function (data, node) {
+    if ((node = data.script.parentNode) && (node = node.parentNode) && node.classList.contains('stemblock')) {
+      data.math.root.display = "block"
+    }
+    return data
+  })
+})
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_HTMLorMML"></script>
+</body>
+</html>
