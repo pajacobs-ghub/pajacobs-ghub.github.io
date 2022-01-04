@@ -1,4 +1,4 @@
-# pajacobs-ghub.pajacobs-ghub.github.io
+# pajacobs-ghub.github.io
 Some documentation for various projects.
 
 The FlashForth tutorials that were once done with LaTeX and
