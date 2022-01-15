@@ -770,14 +770,14 @@ table.tableblock.grid-all th.tableblock, table.tableblock.grid-all td.tableblock
 <li><a href="#_getting_flashforth_and_programming_the_mcu">3.1. Getting FlashForth and programming the MCU</a></li>
 <li><a href="#_building_for_the_pic18f26k22_or_pic18f46k22">3.2. Building for the PIC18F26K22 or PIC18F46K22</a></li>
 <li><a href="#_building_for_the_pic24fv32ka302">3.3. Building for the PIC24FV32KA302</a></li>
-<li><a href="#_building_for_the_atmega328p">3.4. Building for the ATmega328P</a></li>
+<li><a href="#_installing_on_an_atmega328p">3.4. Installing on an ATmega328P</a></li>
 </ul>
 </li>
 <li><a href="#_interacting_with_flashforth">4. Interacting with FlashForth</a></li>
 <li><a href="#_introductory_examples">5. Introductory examples</a>
 <ul class="sectlevel2">
-<li><a href="#_flash_a_light_emitting_diode_with_the_pic24">5.1. Flash a light-emitting diode with the PIC24</a></li>
-<li><a href="#_flash_a_light_emitting_diode_with_the_pic24_2">5.2. Flash a light-emitting diode with the PIC24</a></li>
+<li><a href="#_flash_a_light_emitting_diode_with_the_pic18">5.1. Flash a light-emitting diode with the PIC18</a></li>
+<li><a href="#_flash_a_light_emitting_diode_with_the_pic24">5.2. Flash a light-emitting diode with the PIC24</a></li>
 <li><a href="#_flash_a_light_emitting_diode_with_the_atmega">5.3. Flash a light-emitting diode with the ATmega</a></li>
 <li><a href="#_set_the_cycle_duration_with_a_variable_pic18">5.4. Set the cycle duration with a variable (PIC18)</a></li>
 <li><a href="#_hello_world_morse_code">5.5. Hello, World: Morse code</a></li>
@@ -1240,46 +1240,36 @@ the SRAM memory is allocated within the FlashForth system.</p>
 <h3 id="_building_for_the_pic24fv32ka302">3.3. Building for the PIC24FV32KA302</h3>
 <div class="paragraph">
 <p>Building for the 16-bit PIC24 family is similar process.
-This time look for the source code files in the <code>pic24/</code> subdirectory.
-There are fewer config files but you may need to customize the closest one for
-your particular processor.
-Here is the required text in the <code>p24fk_config.inc</code> file
-for our PIC24FV32KA302-I/SP microcontroller
+This time look for the source code files in the <code>pic24/src/</code> subdirectory.
+For our PIC24FV32KA302-I/SP microcontroller
 using its internal 8 MHz oscillator with 4X PLL
-and installed on the home-made minimal board:</p>
+and installed on the home-made minimal board,
+the configuration files have suitable settings already.
+A new stand-alone MPLAB-X project was started and the following files added:</p>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre>;;; Device memory sizes. Set according to your device.
-;;; You can increase the addressable flash range be decreasing the addressable ram.
-;;; Below is the setting for max amount of ram for PIC24FV32KA302
-.equ FLASH_SIZE,     0x5800  ; Flash size in bytes without the high byte
-                             ; See program memory size in the device datasheet.
-.equ RAM_SIZE,       0x0800  ; Ram size in bytes
-.equ EEPROM_SIZE,    0x0200  ; Eeprom size
-
-; For some reason the normal config macros did not work
-           .pushsection __FOSCSEL.sec, code
-           .global __FOSCSEL
-__FOSCSEL: .pword FNOSC_FRCPLL
-           .popsection
-; Start additions for FF Tutorial board with PIC24FV32KA30x
-           .pushsection __FOSC.sec, code
-           .global __FOSC
-__FOSC:    .pword OSCIOFNC_OFF
-           .popsection
-           .pushsection __FICD.sec, code
-           .global __FICD
-__FICD:    .pword ICS_PGx2
-           .popsection
-; End additions
-
-.equ FREQ_OSC, (8000000*4)	 ;Clock (Crystal)frequency (Hz)</pre>
-</div>
+<div class="ulist">
+<ul>
+<li>
+<p>the main source file <code>ff-pic24-30-33.s</code>,</p>
+</li>
+<li>
+<p><code>configs.c</code> to set the configuration bits via pragma statements,</p>
+</li>
+<li>
+<p><code>ff24.inc</code> to set the memory sizes for the selected microcontroller,</p>
+</li>
+<li>
+<p><code>p24fk_config.inc</code> to set <code>FREQ_OSC</code> with your <code>FNOSC</code> selection in <code>configs.c</code> and
+to select the operator UART.</p>
+</li>
+<li>
+<p><code>registers.inc</code> to define some regiaters in the Flashforth core dictionary.</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
-<p>Once programmed, FlashForth uses 542 of the microcontroller&#8217;s 2048 bytes of SRAM and
-4544 of the MCU&#8217;s 11264 words of Flash memory.
+<p>Flashforth uses 542 of the microcontroller&#8217;s 2048 bytes of SRAM and
+4271 of the MCU&#8217;s 11 kwords of Flash memory.
 This leaves most of the memory for your Forth application program.
 Although this appears to be a lot less than that available in the PIC18F26K22 MCU,
 this 16-bit MCU has lots of interesting hardware.
@@ -1288,24 +1278,23 @@ the current consumption is 7.5 mA, approximately the same as for the 8-bit PIC18
 </div>
 </div>
 <div class="sect2">
-<h3 id="_building_for_the_atmega328p">3.4. Building for the ATmega328P</h3>
+<h3 id="_installing_on_an_atmega328p">3.4. Installing on an ATmega328P</h3>
 <div class="paragraph">
-<p>Assembling the FlashForth program within the AVR Studio IDE is fairly simple but
-Mike Nordman has made life even simpler for users of Arduino-like hardware by providing
-a prebuilt <code>.hex</code> file that can be programmed into the ATmega328P.
-Here is the command for doing so with avrdude on a Linux PC.</p>
+<p>Mike Nordman has made life even simpler for users of Arduino-like hardware by providing
+a number of prebuilt <code>.hex</code> files that can be programmed into your AVR microcontroller.
+For the ATmega328P with a 16 MHz crystal,
+we chose to program the <code>avr/hex/328-16MHz-38400.hex</code> file.
+Here is the command for programming that file using avrdude on a Linux computer
+where an AVR ISP MkII programmer appears as the serial port <code>/dev/ttyUSB1</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>$ sudo avrdude -p m328p -B 8.0 -c avrisp2 -P usb -e \
-  -U efuse:w:0x07:m \
-  -U hfuse:w:0xda:m \
+<pre>$ sudo avrdude -p m328p -B 8.0 -c avrisp2 -P /dev/ttyUSB1 -e \
+  -U efuse:w:0xff:m \
+  -U hfuse:w:0xdf:m \
   -U lfuse:w:0xff:m \
-  -U flash:w:ff_uno.hex:i</pre>
+  -U flash:w:328-16MHz-38400.hex:i</pre>
 </div>
-</div>
-<div class="paragraph">
-<p>The fuses are set to use the 16 MHz crystal on the Arduino-like board.</p>
 </div>
 </div>
 </div>
@@ -1393,7 +1382,7 @@ Our interest will primarily be in driving the various peripherals of the MCU
 rather than doing arithmetic or dealing with abstract data.</p>
 </div>
 <div class="sect2">
-<h3 id="_flash_a_light_emitting_diode_with_the_pic24">5.1. Flash a light-emitting diode with the PIC24</h3>
+<h3 id="_flash_a_light_emitting_diode_with_the_pic18">5.1. Flash a light-emitting diode with the PIC18</h3>
 <div class="paragraph">
 <p>The microcontroller version of the "Hello, World" program is typically a program that
 flashes a single LED.
@@ -1494,7 +1483,7 @@ may not compile without complaint if you don&#8217;t clean up after each exercis
 </div>
 </div>
 <div class="sect2">
-<h3 id="_flash_a_light_emitting_diode_with_the_pic24_2">5.2. Flash a light-emitting diode with the PIC24</h3>
+<h3 id="_flash_a_light_emitting_diode_with_the_pic24">5.2. Flash a light-emitting diode with the PIC24</h3>
 <div class="listingblock">
 <div class="content">
 <pre>-flash-led
@@ -4316,7 +4305,7 @@ lata #3 bit1: RShi
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2022-01-10 21:03:58 +1000
+Last updated 2022-01-15 22:32:35 +1000
 </div>
 </div>
 <script type="text/x-mathjax-config">
