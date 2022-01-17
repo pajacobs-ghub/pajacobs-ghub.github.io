@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.10">
-<meta name="author" content="Port of 2016 LaTeX document&#8201;&#8212;&#8201;2022-01-03">
+<meta name="author" content="Port of 2016 LaTeX document&#8201;&#8212;&#8201;2022-01-17">
 <title>FlashForth 5 Quick Reference for PIC and AVR Microcontrollers</title>
 <style>
 /*! normalize.css v2.1.2 | MIT License | git.io/normalize */
@@ -752,7 +752,7 @@ table.tableblock.grid-all th.tableblock, table.tableblock.grid-all td.tableblock
 <div id="header">
 <h1>FlashForth 5 Quick Reference for PIC and AVR Microcontrollers</h1>
 <div class="details">
-<span id="author" class="author">Port of 2016 LaTeX document&#8201;&#8212;&#8201;2022-01-03</span><br>
+<span id="author" class="author">Port of 2016 LaTeX document&#8201;&#8212;&#8201;2022-01-17</span><br>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -1545,7 +1545,8 @@ FlashForth unifies these memory spaces into a single 64kB address space.</p>
 <div class="sect2">
 <h3 id="_pic18_memory_map">4.1. PIC18 Memory map</h3>
 <div class="paragraph">
-<p>The address ranges are:</p>
+<p>The address ranges for classic PIC18 microcontrollers,
+with 12-bit File-Select Registers are:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -1566,28 +1567,68 @@ FlashForth unifies these memory spaces into a single 64kB address space.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">EEPROM</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>$f000</code>&#8201;&#8212;&#8201;<code>$ff5f</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">SRAM, general use</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>$f000</code>&#8201;&#8212;&#8201;<code>$feff</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SRAM, up to 15 banks (0&#8212;&#8203;14) of 256 bytes for general use</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>$ff60</code>&#8201;&#8212;&#8201;<code>$ffff</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">SRAM, special function registers</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>$ff00</code>&#8201;&#8212;&#8201;<code>$ffff</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SRAM, bank15 contains the special function registers</p></td>
 </tr>
 </tbody>
 </table>
 <div class="paragraph">
 <p>The high memory mark for each context will depend on the particular device used.
-Using a PIC18F26K22 and the default values in <code>p18f-main.cfg</code>
-for the UART version of FF, a total of 423 bytes is dedicated to the FF system.
-The rest (3473 bytes) is free for application use.
-Also, the full 64kB of Flash memory is truncated to fit within the
-range specified above.</p>
+Using a PIC18F26K22 and the default values in <code>p18f-main.inc</code>
+for the UART version of FF, 398 bytes are dedicated to the FF system
+while 3498 bytes are free for application use.
+Also, the full 64kB of Flash memory for the device is truncated to fit within the
+Flashforth address range specified above.</p>
+</div>
+<div class="paragraph">
+<p>The more recent PIC18 microcontrollers with 14-bit File-Select Registers allow a larger
+data space, with 64 banks of 256 bytes each.
+In contrast with earlier PIC18 devices, these have their special function registers
+at the lower end of the address space, in the first 5 banks (0 through 4).
+The Flashforth address ranges for K42, K83 and Q4X families of devices are then:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Range</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Use</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>$0000</code>&#8201;&#8212;&#8201;<code>$bbff</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Flash</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>$bc00</code>&#8201;&#8212;&#8201;<code>$bfff</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">EEPROM</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>$c000</code>&#8201;&#8212;&#8201;<code>$c4ff</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SRAM, banks 0 through 4 contain the special function registers</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>$c500</code>&#8201;&#8212;&#8201;<code>$ffff</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SRAM, up to 50 banks (5&#8212;&#8203;54) of 256 bytes for general use</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>When reading the PIC18 data sheets to get the address of a special-function register,
+remember to add the base address for SRAM when using the address in the Flashforth interpreter.
+Depending on your device, this base address will be <code>$f000</code> or <code>$c000</code>.</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_pic24_memory_map">4.2. PIC24 Memory map</h3>
 <div class="paragraph">
-<p>A device with EEPROM will have its 64kB address space divided into:</p>
+<p>A PIC24 device with EEPROM will have its 64kB address space divided into:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -1981,7 +2022,9 @@ of the boot area and FF kernel.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>$ff81 constant portb</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Define constant in Flash.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Define constant in Flash.
+                            This particular address is for the PortB data register
+                            on a classic PIC18 device.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>3 value xx</code></p></td>
@@ -5393,7 +5436,7 @@ Da Vinci Engineering Press, 2005.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2022-01-03 11:22:03 +1000
+Last updated 2022-01-17 14:34:21 +1000
 </div>
 </div>
 <script type="text/x-mathjax-config">
