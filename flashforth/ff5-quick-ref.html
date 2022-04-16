@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.10">
-<meta name="author" content="Port of 2016 LaTeX document&#8201;&#8212;&#8201;2022-03-29">
+<meta name="author" content="2022-04-16">
 <title>FlashForth 5 Quick Reference for PIC and AVR Microcontrollers</title>
 <style>
 /*! normalize.css v2.1.2 | MIT License | git.io/normalize */
@@ -752,7 +752,7 @@ table.tableblock.grid-all th.tableblock, table.tableblock.grid-all td.tableblock
 <div id="header">
 <h1>FlashForth 5 Quick Reference for PIC and AVR Microcontrollers</h1>
 <div class="details">
-<span id="author" class="author">Port of 2016 LaTeX document&#8201;&#8212;&#8201;2022-03-29</span><br>
+<span id="author" class="author">2022-04-16</span><br>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -1134,7 +1134,7 @@ There is also a return address stack (R:) that can be used for temporary storage
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>2over</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Copy second double item to top. <code>( d1 d2&#8201;&#8212;&#8201;d1 d2 d1 )</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Copy second double item to top. <code>( d1 d2&#8201;&#8212;&#8201;d1 d2 d1 )</code> PIC18</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>2drop</code></p></td>
@@ -1763,11 +1763,13 @@ of the boot area and FF kernel.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>!</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Store x to address. <code>( x a-addr&#8201;&#8212;&#8201;)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Store x to address. <code>( x a-addr&#8201;&#8212;&#8201;)</code><br>
+          For 8-bit MCUs (PIC18, AVR), the high byte is stored first, then the low byte.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Fetch from address. <code>( a-addr&#8201;&#8212;&#8201;x )</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Fetch from address. <code>( a-addr&#8201;&#8212;&#8201;x )</code><br>
+          For PIC18, AVR, the low byte is read first, then the high byte.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@+</code></p></td>
@@ -1775,7 +1777,8 @@ of the boot area and FF kernel.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>2!</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Store 2 cells to address. <code>( x1 x2 a-addr&#8201;&#8212;&#8201;)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Store 2 cells to address. <code>( x1 x2 a-addr&#8201;&#8212;&#8201;)</code><br>
+          <code>x1</code> to lower address. <code>x2</code> to higher address.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>2@</code></p></td>
@@ -1921,11 +1924,8 @@ of the boot area and FF kernel.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>find</code> <em>name</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Find name in dictionary. <code>(&#8201;&#8212;&#8201;n )</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Leave 1 immediate, -1 normal, 0 not found.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Find name in dictionary. <code>(&#8201;&#8212;&#8201;n )</code><br>
+                          Leave 1 immediate, -1 normal, 0 not found.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>forget</code> <em>name</em></p></td>
@@ -2151,7 +2151,7 @@ of the boot area and FF kernel.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>&gt;body</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Leave the parameter field address of the created word. <code>( xt&#8201;&#8212;&#8201;a-addr )</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Leave the data field address of the created word. <code>( xt&#8201;&#8212;&#8201;a-addr )</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>:noname</code></p></td>
@@ -2473,15 +2473,18 @@ my-array 20 dump</pre>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>'emit</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">EMIT vector.  Default is <code>tx1</code> <code>(&#8201;&#8212;&#8201;a-addr )</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">EMIT vector.  Default is <code>tx1</code> <code>(&#8201;&#8212;&#8201;a-addr )</code><br>
+              <code>tx0</code>, <code>tx1</code>, <code>tx2</code>, <code>tx3</code> or <code>txu</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>'key</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">KEY vector.  Default is <code>rx1</code> <code>(&#8201;&#8212;&#8201;a-addr )</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">KEY vector.  Default is <code>rx1</code> <code>(&#8201;&#8212;&#8201;a-addr )</code><br>
+              <code>rx0</code>, <code>rx1</code>, <code>rx2</code>, <code>rx3</code> or <code>rxu</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>'key?</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">KEY? vector.  Default is <code>rx1?</code>  <code>(&#8201;&#8212;&#8201;a-addr )</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">KEY? vector.  Default is <code>rx1?</code>  <code>(&#8201;&#8212;&#8201;a-addr )</code><br>
+              <code>rx0?</code>, <code>rx1?</code>, <code>rx2?</code>, <code>rx3?</code> or <code>rxu?</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>'source</code></p></td>
@@ -3435,8 +3438,8 @@ to allow proper nesting of words.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>n=</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Compare strings in RAM(<code>addr</code>) and Flash(<code>nfa</code>).  <code>( addr nfa u&#8201;&#8212;&#8201;f )</code><br>
-                    Leave true if strings match, <code>n &lt; 16</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Compare strings in RAM(<code>addr</code>) and Flash(<code>nfa</code>).  <code>( c-addr c-addr(nfa)&#8201;&#8212;&#8201;f )</code><br>
+                    Flag is zero if strings match, <code>length &lt; 16</code>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>scan</code></p></td>
@@ -3502,7 +3505,8 @@ to allow proper nesting of words.</p>
 <h3 id="_pictured_numeric_output">10.2. Pictured numeric output</h3>
 <div class="paragraph">
 <p>Formatted string representing an unigned double-precision integer
-is constructed in the end of <code>tib</code>.</p>
+is constructed in the end of <code>tib</code>.
+Digits are converted in order of least significant to most significant.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -3524,12 +3528,12 @@ is constructed in the end of <code>tib</code>.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>#s</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Convert remaining digits. <code>( ud1&#8201;&#8212;&#8201;ud2 )</code> <em>compile only</em>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Convert remaining digits. <code>( ud1&#8201;&#8212;&#8201;ud2 )</code> <em>compile only</em><br>
            Note that <code>ud2</code> will be zero.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>hold</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Append char to formatted string. <code>( c&#8201;&#8212;&#8201;)</code> <em>compile only</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Add char to formatted string. <code>( c&#8201;&#8212;&#8201;)</code> <em>compile only</em></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>sign</code></p></td>
@@ -3552,6 +3556,29 @@ is constructed in the end of <code>tib</code>.</p>
 </div>
 <div class="paragraph">
 <p>results in <code>-034 ok</code></p>
+</div>
+<div class="paragraph">
+<p>A more useful example might be to define a word that formats a double value
+to include a decimal point before the last two digits.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>: (d.2) ( d -- )
+  swap over dabs
+  &lt;# # # [char] . hold #s rot sign #&gt;
+;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now, the following:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>-34. (d.2) type</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>results in <code>-0.34 ok</code></p>
 </div>
 </div>
 </div>
@@ -3617,11 +3644,11 @@ vectors <code>'emit</code>, <code>'key</code> and <code>'key?</code>.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>tx0</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Send a character via UART0 on ATmega. <code>( c&#8201;&#8212;&#8201;)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Send a character via UART0. <code>( c&#8201;&#8212;&#8201;)</code> ATmega</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>rx0</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Receive a character from UART0 on ATmega. <code>(&#8201;&#8212;&#8201;c )</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Receive a character from UART0. <code>(&#8201;&#8212;&#8201;c )</code> ATmega</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>rx0?</code></p></td>
@@ -3629,11 +3656,11 @@ vectors <code>'emit</code>, <code>'key</code> and <code>'key?</code>.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>u0-</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Disable flow control for UART1 interface. <code>(&#8201;&#8212;&#8201;)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Disable flow control for UART0 interface. <code>(&#8201;&#8212;&#8201;)</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>u0+</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Enable flow control for UART1 interface, default. <code>(&#8201;&#8212;&#8201;)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable flow control for UART0 interface, default. <code>(&#8201;&#8212;&#8201;)</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>tx1</code></p></td>
@@ -3659,15 +3686,15 @@ vectors <code>'emit</code>, <code>'key</code> and <code>'key?</code>.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>tx2</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Send character to UART2. <code>( c&#8201;&#8212;&#8201;)</code> PIC24-30-33</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Send character to UART2. <code>( c&#8201;&#8212;&#8201;)</code> PIC18,24-30-33</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>rx2</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Receive a character from UART2. <code>(&#8201;&#8212;&#8201;c )</code> PIC24-30-33</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Receive a character from UART2. <code>(&#8201;&#8212;&#8201;c )</code> PIC18,24-30-33</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>rx2?</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Leave !true! if the UART1 receive buffer is not empty. <code>(&#8201;&#8212;&#8201;f )</code> PIC24-30-33</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Leave !true! if the UART2 receive buffer is not empty. <code>(&#8201;&#8212;&#8201;f )</code> PIC18,24-30-33</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>u2-</code></p></td>
@@ -3678,16 +3705,36 @@ vectors <code>'emit</code>, <code>'key</code> and <code>'key?</code>.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Enable flow control for UART2 interface, default. <code>(&#8201;&#8212;&#8201;)</code></p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>tx3</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Send character to UART3. <code>( c&#8201;&#8212;&#8201;)</code> PIC18</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>rx3</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Receive a character from UART3. <code>(&#8201;&#8212;&#8201;c )</code> PIC18</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>rx3?</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Leave !true! if the UART3 receive buffer is not empty. <code>(&#8201;&#8212;&#8201;f )</code> PIC18</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>txu</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Send a character via the USB UART. <code>( c&#8201;&#8212;&#8201;)</code>  PIC18-USB</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Send a character via the USB UART. <code>( c&#8201;&#8212;&#8201;)</code>  PIC18-24 USB</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>rxu</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Receive a character from the USB UART. <code>(&#8201;&#8212;&#8201;c )</code>  PIC18-USB</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Receive a character from the USB UART. <code>(&#8201;&#8212;&#8201;c )</code>  PIC18-24 USB</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>rxu?</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Leave <code>true</code> if the USB UART receive buffer is not empty. PIC18-USB <code>(&#8201;&#8212;&#8201;f )</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Leave <code>true</code> if the USB UART receive buffer is not empty. <code>(&#8201;&#8212;&#8201;f )</code> PIC18-24 USB</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>usb+</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Start the USB serial interface <code>(&#8201;&#8212;&#8201;)</code> PIC18-24 USB</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>usb-</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Stop the USB serial interface <code>(&#8201;&#8212;&#8201;)</code> PIC18-24 USB</p></td>
 </tr>
 </tbody>
 </table>
@@ -5408,9 +5455,9 @@ adjust the register settings in <code>spi.init</code> to suit your particular de
 <h2 id="_bibliography">Bibliography</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This guide assembled by Peter Jacobs, School of Mechanical Engineering,
+<p>This reference assembled by Peter Jacobs, School of Mechanical Engineering,
 The University of Queensland, February-2016 as Report 2016/02.
-Update 2018-04-09, Ported to ASCIIDOC 2022-01-02.</p>
+Ported to ASCIIDOC 2022-01-02.</p>
 </div>
 <div class="paragraph">
 <p>It is a remix of material from the following sources:<br></p>
@@ -5444,7 +5491,7 @@ Da Vinci Engineering Press, 2005.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2022-03-30 21:28:10 +1000
+Last updated 2022-04-16 17:50:05 +1000
 </div>
 </div>
 <script type="text/x-mathjax-config">
